@@ -1,11 +1,10 @@
 import { Canvas } from '@react-three/fiber'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
-import { useState } from 'react'
 import { useAnimationStore } from './store/useAnimationStore'
 
 const App = () => {
-  const { currentAnimation, setCurrentAnimation } = useAnimationStore()
+  const { setCurrentAnimation } = useAnimationStore()
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>

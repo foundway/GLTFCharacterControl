@@ -1,13 +1,13 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, Gltf, useGLTF, useAnimations, Environment, ContactShadows, Preload, RoundedBox } from '@react-three/drei'
-import { useRef, useEffect, useState } from 'react'
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei'
+import { useRef } from 'react'
 import { Group } from 'three'
 import { Character } from './Character'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += delta * 0.5
     }
