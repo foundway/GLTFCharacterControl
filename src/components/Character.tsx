@@ -21,9 +21,15 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   const { scene, animations } = useGLTF('W5_LOD2.glb')
   const group = React.useRef<THREE.Group>(null)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
+  // const { nodes, materials } = useGraph(clone) as unknown as GLTFResult
   const { actions } = useAnimations(animations, group)
   const { currentAnimation } = useAnimationStore()
+
+  clone.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.material = new THREE.MeshStandardMaterial({ color: 'red' })
+    }
+  })
 
   useEffect(() => {
     actions[currentAnimation]?.reset().fadeIn(0.5).play()
@@ -33,18 +39,19 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   }, [currentAnimation])
 
   // Find the skinned mesh and root bone from the nodes array
-  const mesh = Object.values(nodes).find(node => node instanceof THREE.SkinnedMesh) as THREE.SkinnedMesh
-  const root = Object.values(nodes).find(node => node instanceof THREE.Bone) as THREE.Bone
+  // const mesh = Object.values(nodes).find(node => node instanceof THREE.SkinnedMesh) as THREE.SkinnedMesh
+  // const root = Object.values(nodes).find(node => node instanceof THREE.Bone) as THREE.Bone
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <primitive object={root} />
-      <skinnedMesh
+      {/* <primitive object={root} /> */}
+      <primitive object={scene} />
+      {/* <skinnedMesh
         geometry={mesh.geometry} 
         material={Object.values(materials)[0]} 
         skeleton={mesh.skeleton} 
         morphTargetDictionary={mesh.morphTargetDictionary}
-        morphTargetInfluences={mesh.morphTargetInfluences} />
+        morphTargetInfluences={mesh.morphTargetInfluences} /> */}
     </group>
   )
 }
