@@ -6,6 +6,6 @@ interface EnvironmentState {
 }
 
 export const useEnvironmentStore = create<EnvironmentState>((set) => ({
-  showEnvironment: true,
+  showEnvironment: false,
   toggleEnvironment: () => set((state) => ({ showEnvironment: !state.showEnvironment })),
 })) 

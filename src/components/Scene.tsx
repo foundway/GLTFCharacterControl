@@ -5,7 +5,6 @@ import { Group } from 'three'
 import { Character } from './Character'
 import { Menu } from './ui/Menu'
 import { useEnvironmentStore } from '../store/useEnvironmentStore'
-// import { useXR } from '@react-three/xr'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
@@ -24,13 +23,15 @@ const Scene = () => {
       {showEnvironment ?
         <Environment
         files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr" 
-        ground={{ height: 5, radius: 40, scale: 20 }} /> : 
-        <Environment preset="sunset" />}
+        ground={{ height: 5, radius: 40, scale: 20 }} 
+        background={false}
+        /> : 
+        <Environment preset="apartment" />}
       <group ref={groupRef} position={[0, 0, -1]}>
         <Character />
       </group>
-      <Menu />
       <OrbitControls makeDefault target={[0, 1, -1]} />
+      <Menu />
       <Grid
         position={[0, 0, 0]}
         args={[20, 20]}
@@ -40,7 +41,7 @@ const Scene = () => {
         sectionSize={100}
         sectionThickness={1.5}
         sectionColor="#944"
-        fadeDistance={10}
+        fadeDistance={5}
       />
     </>
   )

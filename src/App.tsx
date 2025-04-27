@@ -2,12 +2,12 @@ import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
-import { useAnimationStore } from './store/useAnimationStore'
+// import { useAnimationStore } from './store/useAnimationStore'
 import { useModelStore } from './store/useModelStore'
 import Scene from './components/Scene'
 
 const App = () => {
-  const { setCurrentAnimation } = useAnimationStore()
+  // const { setCurrentAnimation } = useAnimationStore()
   const { addModel } = useModelStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
   const store = createXRStore()
