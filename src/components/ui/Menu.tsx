@@ -5,7 +5,7 @@ import { useXR } from '@react-three/xr'
 import { useEnvironmentStore } from '../../store/useEnvironmentStore'
 
 export const Menu = () => {
-  const { isXR, toggleXR } = useXRStore()
+  const { toggleXR } = useXRStore()
   const { session } = useXR()
   const { showEnvironment, toggleEnvironment } = useEnvironmentStore()
 

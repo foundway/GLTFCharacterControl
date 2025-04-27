@@ -1,21 +1,15 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, Environment, ContactShadows, RoundedBox, Gltf, Grid, Shadow } from '@react-three/drei'
+import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { useRef } from 'react'
-import { GridHelper, Group, Color } from 'three'
+import { Group } from 'three'
 import { Character } from './Character'
-import { useGLTF } from '@react-three/drei'
-import { useModelStore } from '../store/useModelStore'
 import { Menu } from './ui/Menu'
 import { useEnvironmentStore } from '../store/useEnvironmentStore'
 // import { useXR } from '@react-three/xr'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
-  const { models } = useModelStore()
   const { showEnvironment } = useEnvironmentStore()
-  const lastModel = models[models.length - 1]
-  const uploadedGLTF = lastModel ? useGLTF(lastModel) : null
-  // const { session } = useXR()
 
   useFrame((_, delta) => {
     // if (groupRef.current && !session) {
