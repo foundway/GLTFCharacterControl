@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.0",
-    "@react-three/drei": "^10.0.6",
+    "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
     "@react-three/uikit": "^0.8.15",
     "@react-three/uikit-default": "^0.8.15",

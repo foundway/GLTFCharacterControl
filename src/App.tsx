@@ -22,7 +22,10 @@ const App = () => {
 
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
-      <Canvas shadows camera={{ position: [3, 1, 3], fov: 50 }}>
+      <Canvas 
+        shadows 
+        camera={{ position: [0, 1.5, 0], fov: 50 }}
+      >
         <XR store={store}>
           <Scene />
         </XR>
@@ -47,8 +50,8 @@ const App = () => {
         <Button onClick={() => setCurrentAnimation('TRACK-arm-stretching')}>
           Arm Stretching
         </Button>
-        <Button onClick={() => store.enterVR()}>
-          Enter AR
+        <Button onClick={() => store.enterAR()}>
+          Enter XR
         </Button>
       </div>
     </div>
