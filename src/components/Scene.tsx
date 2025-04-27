@@ -21,13 +21,13 @@ const Scene = () => {
   return (
     <>
       <color attach="background" args={['#333333']} />
-      {showEnvironment ?
-        <Environment
-          files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr" 
-          ground={{ height: 5, radius: 40, scale: 20 }} 
-          background={false}
-        /> : 
-        <Environment preset="apartment" />}
+      <Environment
+        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr"
+        {...(showEnvironment ? {
+          background: true,
+          ground: { height: 5, radius: 40, scale: 100 } // "ground" automatically discards other background settings. TODO: submit an issue on github.
+        } : { background: false })}
+      />
       <group ref={groupRef} position={[0, elevation, -1]}>
         <Character />
       </group>
