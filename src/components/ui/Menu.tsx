@@ -1,13 +1,15 @@
 import { Root, Container, Text } from '@react-three/uikit'
-import { Button } from '@react-three/uikit-default'
+import { Button, Slider } from '@react-three/uikit-default'
 import { useXRStore } from '../../store/useXRStore'
 import { useXR } from '@react-three/xr'
 import { useEnvironmentStore } from '../../store/useEnvironmentStore'
+import { useTurntableStore } from '../../store/useTurntableStore'
 
 export const Menu = () => {
   const { toggleXR } = useXRStore()
   const { session } = useXR()
   const { showEnvironment, toggleEnvironment } = useEnvironmentStore()
+  const { isRotating, toggleRotation, elevation, setElevation } = useTurntableStore()
 
   const handleXRClick = () => {
     if (session) {
@@ -16,7 +18,6 @@ export const Menu = () => {
       toggleXR()
     }
   }
-
 
   if (session) {
     return (
@@ -31,6 +32,17 @@ export const Menu = () => {
                 <Button onClick={toggleEnvironment}>
                     <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
                 </Button>
+                <Button onClick={toggleRotation}>
+                    <Text>{isRotating ? 'Stop Turntable' : 'Start Turntable'}</Text>
+                </Button>
+                <Text padding={4}>Elevation</Text>
+                <Slider 
+                    value={elevation} 
+                    onValueChange={setElevation}
+                    max={2} 
+                    step={0.01} 
+                    padding={4}
+                />
                 </Container>
             </Root>
         </group>

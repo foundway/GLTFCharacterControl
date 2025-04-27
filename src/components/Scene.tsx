@@ -5,14 +5,15 @@ import { Group } from 'three'
 import { Character } from './Character'
 import { Menu } from './ui/Menu'
 import { useEnvironmentStore } from '../store/useEnvironmentStore'
+import { useTurntableStore } from '../store/useTurntableStore'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
   const { showEnvironment } = useEnvironmentStore()
+  const { isRotating, elevation } = useTurntableStore()
 
   useFrame((_, delta) => {
-    // if (groupRef.current && !session) {
-    if (groupRef.current) {
+    if (groupRef.current && isRotating) {
       groupRef.current.rotation.y += delta * 0.5
     }
   })
@@ -22,12 +23,12 @@ const Scene = () => {
       <color attach="background" args={['#333333']} />
       {showEnvironment ?
         <Environment
-        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr" 
-        ground={{ height: 5, radius: 40, scale: 20 }} 
-        background={false}
+          files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr" 
+          ground={{ height: 5, radius: 40, scale: 20 }} 
+          background={false}
         /> : 
         <Environment preset="apartment" />}
-      <group ref={groupRef} position={[0, 0, -1]}>
+      <group ref={groupRef} position={[0, elevation, -1]}>
         <Character />
       </group>
       <OrbitControls makeDefault target={[0, 1, -1]} />
