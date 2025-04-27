@@ -9,13 +9,16 @@ import React, { JSX, useEffect } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import { useAnimationStore } from '../store/useAnimationStore'
+import { useModelStore } from '../store/useModelStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
-  const { scene, animations } = useGLTF('Duck.glb')
+  const { currentAnimation } = useAnimationStore()
+  const { models } = useModelStore()
+  const modelUrl = models[models.length - 1] || 'Duck.glb'
+  const { scene, animations } = useGLTF(modelUrl)
   const group = React.useRef<THREE.Group>(null)
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { actions } = useAnimations(animations, group)
-  const { currentAnimation } = useAnimationStore()
 
   clone.traverse((child) => {
     console.log(child)

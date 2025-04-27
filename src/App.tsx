@@ -39,9 +39,9 @@ const App = () => {
           className="hidden"
         />
         <Button onClick={() => fileInputRef.current?.click()}>
-          Upload GLTF
+          Load GLB Model
         </Button>
-        <Button onClick={() => setCurrentAnimation('TRACK-idle')}>
+        {/* <Button onClick={() => setCurrentAnimation('TRACK-idle')}>
           Normal Idle
         </Button>
         <Button onClick={() => setCurrentAnimation('TRACK-sad-idle')}>
@@ -49,7 +49,7 @@ const App = () => {
         </Button>
         <Button onClick={() => setCurrentAnimation('TRACK-arm-stretching')}>
           Arm Stretching
-        </Button>
+        </Button> */}
         <Button onClick={() => store.enterAR()}>
           Enter XR
         </Button>

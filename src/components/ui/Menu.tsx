@@ -17,20 +17,25 @@ export const Menu = () => {
     }
   }
 
-  return (
-    <group position={[0, 2, -1]}>
-      <Root pixelSize={0.002}>
-        <Container flexDirection="column" gap={4}>
-          {session && (
-            <Button onClick={handleXRClick}>
-              <Text>Exit XR</Text>
+
+  if (session) {
+    return (
+        <group position={[0, 2, -1]}>
+        <Root pixelSize={0.002}>
+            <Container flexDirection="column" gap={4}>
+            {session && (
+                <Button onClick={handleXRClick}>
+                <Text>Exit XR</Text>
+                </Button>
+            )}
+            <Button onClick={toggleEnvironment}>
+                <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
             </Button>
-          )}
-          <Button onClick={toggleEnvironment}>
-            <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
-          </Button>
-        </Container>
-      </Root>
-    </group>
-  )
+            </Container>
+        </Root>
+        </group>
+    )
+  } else {
+    return null
+  }
 }
