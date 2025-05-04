@@ -1,7 +1,6 @@
-import { useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { useRef } from 'react'
 import { Group } from 'three'
+import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { Character } from './Character'
 import { Menu } from './ui/Menu'
 import { useEnvironmentStore } from '../store/useEnvironmentStore'
