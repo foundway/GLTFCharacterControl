@@ -1,4 +1,4 @@
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { useRef } from 'react'
 import { Group } from 'three'
@@ -10,10 +10,6 @@ const Scene = () => {
   const groupRef = useRef<Group>(null)
   const { showEnvironment } = useEnvironmentStore()
 
-  useFrame((_) => {
-    // do nothing for now
-  })
-
   return (
     <>
       <color attach="background" args={['#333333']} />
@@ -21,25 +17,27 @@ const Scene = () => {
         files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr"
         {...(showEnvironment ? {
           background: true,
-          ground: { height: 5, radius: 40, scale: 100 } // "ground" automatically discards other background settings. TODO: submit an issue on github.
+          ground: { height: 5, radius: 40, scale: 100 }
         } : { background: false })}
       />
       <group ref={groupRef} position={[0, 0, -1]}>
         <Character />
       </group>
       <OrbitControls makeDefault target={[0, 0.5, -1]} />
+      <group renderOrder={-1}>
+        <Grid
+          position={[0, 0, 0]}
+          args={[10, 10]}
+          cellSize={0.2}
+          cellThickness={1}
+          cellColor="#eee"
+          sectionSize={100}
+          sectionThickness={1}
+          sectionColor="#944"
+          fadeDistance={2}
+        />
+      </group>
       <Menu />
-      <Grid
-        position={[0, 0, 0]}
-        args={[20, 20]}
-        cellSize={0.5}
-        cellThickness={1}
-        cellColor="#eee"
-        sectionSize={100}
-        sectionThickness={1.5}
-        sectionColor="#944"
-        fadeDistance={5}
-      />
     </>
   )
 }
