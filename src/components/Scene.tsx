@@ -5,17 +5,13 @@ import { Group } from 'three'
 import { Character } from './Character'
 import { Menu } from './ui/Menu'
 import { useEnvironmentStore } from '../store/useEnvironmentStore'
-import { useTurntableStore } from '../store/useTurntableStore'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
   const { showEnvironment } = useEnvironmentStore()
-  const { isRotating, elevation } = useTurntableStore()
 
-  useFrame((_, delta) => {
-    if (groupRef.current && isRotating) {
-      groupRef.current.rotation.y += delta * 0.5
-    }
+  useFrame((_) => {
+    // do nothing for now
   })
 
   return (
@@ -28,7 +24,7 @@ const Scene = () => {
           ground: { height: 5, radius: 40, scale: 100 } // "ground" automatically discards other background settings. TODO: submit an issue on github.
         } : { background: false })}
       />
-      <group ref={groupRef} position={[0, elevation, -1]}>
+      <group ref={groupRef} position={[0, 0, -1]}>
         <Character />
       </group>
       <OrbitControls makeDefault target={[0, 1, -1]} />
