@@ -27,7 +27,7 @@ const Scene = () => {
       <group ref={groupRef} position={[0, 0, -1]}>
         <Character />
       </group>
-      <OrbitControls makeDefault target={[0, 1, -1]} />
+      <OrbitControls makeDefault target={[0, 0.5, -1]} />
       <Menu />
       <Grid
         position={[0, 0, 0]}
