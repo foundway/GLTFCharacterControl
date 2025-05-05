@@ -1,13 +1,15 @@
 import { useRef } from 'react'
 import { Group } from 'three'
 import { OrbitControls, Environment, Grid } from '@react-three/drei'
+import { useXR } from '@react-three/xr'
 import { Character } from './Character'
 import { Menu } from './ui/Menu'
-import { useEnvironmentStore } from '../store/useEnvironmentStore'
+import { useSceneStore } from '../store/useSceneStore'
 
 const Scene = () => {
   const groupRef = useRef<Group>(null)
-  const { showEnvironment } = useEnvironmentStore()
+  const { showEnvironment, showGrid } = useSceneStore()
+  const { session } = useXR()
 
   return (
     <>
@@ -22,20 +24,22 @@ const Scene = () => {
       <group ref={groupRef} position={[0, 0, -1]}>
         <Character />
       </group>
-      <OrbitControls makeDefault target={[0, 0.5, -1]} />
-      <group renderOrder={-1}>
-        <Grid
-          position={[0, 0, 0]}
-          args={[10, 10]}
-          cellSize={0.2}
-          cellThickness={1}
-          cellColor="#eee"
-          sectionSize={100}
-          sectionThickness={1}
-          sectionColor="#944"
-          fadeDistance={2}
-        />
-      </group>
+      {!session && <OrbitControls target={[0, 0.5, -1]} />}
+      {showGrid && (
+        <group renderOrder={-1}>
+          <Grid
+            position={[0, 0, 0]}
+            args={[20, 20]}
+            cellSize={0.5}
+            cellThickness={1}
+            cellColor="#eee"
+            sectionSize={100}
+            sectionThickness={1}
+            sectionColor="#944"
+            fadeDistance={3}
+          />
+        </group>
+      )}
       <Menu />
     </>
   )

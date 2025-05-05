@@ -1,35 +1,37 @@
-import { Root, Container, Text } from '@react-three/uikit'
-import { Button } from '@react-three/uikit-default'
-import { useXRStore } from '../../store/useXRStore'
-import { useXR } from '@react-three/xr'
-import { useEnvironmentStore } from '../../store/useEnvironmentStore'
 import { useState, useRef } from 'react'
-import { ThreeElements } from '@react-three/fiber'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Vector3 } from 'three'
+import { Vector3, Group } from 'three'
+import { ThreeElements, useFrame, useThree } from '@react-three/fiber'
+import { useXR } from '@react-three/xr'
+import { Root, Container, Text, setPreferredColorScheme, Fullscreen, DefaultProperties } from '@react-three/uikit'
+import { Button, Card } from '@react-three/uikit-default'
+import { Menu as MenuIcon, ChevronDown, ChevronUp } from '@react-three/uikit-lucide'
+import { useXRStore } from '../../store/useXRStore'
+import { useSceneStore } from '../../store/useSceneStore'
 
-type MenuProps = ThreeElements['group']
-
-export const Menu = (props: MenuProps) => {
+export const Menu = () => {
   const { toggleXR } = useXRStore()
   const { session } = useXR()
-  const { showEnvironment, toggleEnvironment } = useEnvironmentStore()
+  const { showEnvironment, toggleEnvironment, showGrid, toggleGrid } = useSceneStore()
   const [isMenuVisible, setIsMenuVisible] = useState(false)
   const { camera } = useThree()
-  const [position, setPosition] = useState(new Vector3(0, 2, -1))
-  const targetPosition = useRef(new Vector3(0, 2, -1))
+  const groupRef = useRef<Group>(null)
 
   useFrame((_, delta) => {
-    if (!camera?.position) return
+    if (!camera) return
+    if (!groupRef.current) return
 
-    targetPosition.current.set(
-      camera.position.x,
-      camera.position.y - 0.7, 
-      camera.position.z - 0.9 
-    )
-    
-    const newPosition = position.clone().lerp(targetPosition.current, delta * 10)
-    setPosition(newPosition)
+    const cameraForwardH = new Vector3()
+    camera.getWorldDirection(cameraForwardH)
+    cameraForwardH.y = 0;
+    const menuForwardH = groupRef.current.position.clone().sub(camera.position).normalize()
+    menuForwardH.y = 0;
+
+    if (cameraForwardH.angleTo(menuForwardH) * (180/Math.PI) < 30) {
+      cameraForwardH.copy(menuForwardH)
+    }
+    const targetPosition = camera.position.clone().add(cameraForwardH.multiplyScalar(0.9))
+    groupRef.current.position.copy(targetPosition)
+    groupRef.current.lookAt(camera.position)
   })
 
   const handleXRClick = () => {
@@ -46,32 +48,31 @@ export const Menu = (props: MenuProps) => {
 
   if (!session) return null
 
+  setPreferredColorScheme("dark")
+
   return (
-    <group position={position} {...props}>
-      <Root pixelSize={0.0015}>
-        <Container 
-          key={isMenuVisible ? 'menu-content' : 'menu-button'} // fix for the menu not updating when the menu is hidden
+    <group ref={groupRef}>
+      <Root pixelSize={0.002} flexDirection={"column"} alignItems={"center"}>
+        {isMenuVisible && (<Card 
+          positionType="absolute"
+          positionBottom={50}
           flexDirection="column" 
-          alignSelf={"flex-start"}
-          gap={4} 
-          backgroundColor="rgb(234, 234, 234)"
-          padding={16}
-          borderRadius={8}
+          alignItems="stretch"
+          padding={4}
         >
-          {isMenuVisible && (
-            <>
-              <Button onClick={handleXRClick}>
-                <Text>Exit XR</Text>
-              </Button>
-              <Button onClick={toggleEnvironment}>
-                <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
-              </Button>
-            </>
-          )}
-          <Button onClick={toggleMenu}>
-            <Text>{isMenuVisible ? 'Close Menu' : 'Open Menu'}</Text>
+          <Button onClick={handleXRClick} variant="ghost">
+            <Text>Exit XR</Text>
           </Button>
-        </Container>
+          <Button onClick={toggleEnvironment} variant="ghost">
+            <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
+          </Button>
+          <Button onClick={toggleGrid} variant="ghost">
+            <Text>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
+          </Button>
+        </Card>)}
+        <Button onClick={toggleMenu} variant="secondary" size="icon" >
+          {isMenuVisible ? <ChevronDown /> : <MenuIcon />}
+        </Button>
       </Root>
     </group>
   )
