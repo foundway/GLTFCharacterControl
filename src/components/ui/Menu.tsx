@@ -2,9 +2,9 @@ import { useState, useRef } from 'react'
 import { Vector3, Group } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useXR } from '@react-three/xr'
-import { Root, Text, setPreferredColorScheme } from '@react-three/uikit'
+import { Root, Text, setPreferredColorScheme, Container} from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
-import { Menu as MenuIcon, ChevronDown } from '@react-three/uikit-lucide'
+import { Menu as MenuIcon, ChevronDown, ChevronRight } from '@react-three/uikit-lucide'
 import { useXRStore } from '../../store/useXRStore'
 import { useSceneStore } from '../../store/useSceneStore'
 
@@ -65,6 +65,7 @@ export const Menu = () => {
     <group ref={groupRef} >
       <Root pixelSize={0.0015} flexDirection={"column"} alignItems={"center"} depthTest={false} depthWrite={false}>
         {isMenuVisible && (<Card 
+          borderWidth={0}
           positionType="absolute"
           positionBottom={50}
           flexDirection="column" 
@@ -72,13 +73,17 @@ export const Menu = () => {
           padding={4}
         >
           <Button onClick={toggleEnvironment} variant="ghost">
-            <Text>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
+            <Text width={"100%"}>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
           </Button>
           <Button onClick={toggleGrid} variant="ghost">
-            <Text>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
+            <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
+          </Button>
+          <Button onClick={() => {}} variant="ghost">
+            <Text width={"100%"}>Animations</Text>
+            <ChevronRight />
           </Button>
           <Button onClick={handleXRClick} variant="ghost">
-            <Text>Exit XR</Text>
+            <Text width={"100%"}>Exit XR</Text>
           </Button>
         </Card>)}
         <Button onClick={toggleMenu} variant="secondary" size="icon" >
