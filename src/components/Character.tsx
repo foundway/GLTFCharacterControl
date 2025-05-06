@@ -10,7 +10,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import { useAnimationStore } from '../store/useAnimationStore'
 import { useModelStore } from '../store/useModelStore'
-import { Handle, HandleTarget } from '@react-three/handle'
+import { Handle, HandleTarget, HandleOptions } from '@react-three/handle'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation } = useAnimationStore()
@@ -34,8 +34,8 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   return (
     <HandleTarget>
-      <group ref={group} {...props} dispose={null}>
-        <Handle translate={{ x: true, y: true, z: true }} scale={false} /*rotate={{x: false, z: false}}*/>
+      <group ref={group} {...props} dispose={null} renderOrder={-100}>
+        <Handle translate={{ x: true, y: true, z: true }} scale={false} >
           <primitive object={clone} />
         </Handle>
       </group>
