@@ -23,10 +23,10 @@ export const Menu = () => {
   const Z_OFFSET = 1
 
   useFrame((_, delta) => {
-    updatePosition(delta)
+    updateMenuPosition(delta)
   })
 
-  const updatePosition = (delta: number) => {
+  const updateMenuPosition = (delta: number) => {
     if (!camera) return
     if (!groupRef.current) return
 
