@@ -4,7 +4,6 @@ import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
 import { useModelStore } from './store/useModelStore'
-import { OrbitControls } from '@react-three/drei'
 
 const App = () => {
   const { addModel } = useModelStore()

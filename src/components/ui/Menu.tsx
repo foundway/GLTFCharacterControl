@@ -20,7 +20,7 @@ export const Menu = () => {
   const ANGLE_THRESHOLD = 30
   const LERP_SPEED = 4 
   const Y_OFFSET = -0.6
-  const Z_OFFSET = 0.9
+  const Z_OFFSET = 1
 
   useFrame((_, delta) => {
     updatePosition(delta)

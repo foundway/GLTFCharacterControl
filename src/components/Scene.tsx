@@ -1,5 +1,3 @@
-import { useRef } from 'react'
-import { Group } from 'three'
 import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { useXR } from '@react-three/xr'
 import { Character } from './Character'
@@ -7,7 +5,6 @@ import { Menu } from './ui/Menu'
 import { useSceneStore } from '../store/useSceneStore'
 
 const Scene = () => {
-  const groupRef = useRef<Group>(null)
   const { showEnvironment, showGrid } = useSceneStore()
   const { session } = useXR()
 
@@ -21,9 +18,7 @@ const Scene = () => {
           ground: { height: 5, radius: 40, scale: 100 }
         } : { background: false })}
       />
-      <group ref={groupRef} position={[0, 0, -1]}>
-        <Character />
-      </group>
+      <Character />
       {!session && <OrbitControls target={[0, 0.5, -1]} />}
       {showGrid && (
         <group renderOrder={-1}>

@@ -10,7 +10,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import { useAnimationStore } from '../store/useAnimationStore'
 import { useModelStore } from '../store/useModelStore'
-import { Handle, HandleTarget, HandleOptions } from '@react-three/handle'
+import { Handle, HandleTarget } from '@react-three/handle'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation } = useAnimationStore()
