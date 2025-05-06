@@ -13,7 +13,7 @@ import { useModelStore } from '../store/useModelStore'
 import { Handle, HandleTarget } from '@react-three/handle'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
-  const { currentAnimation } = useAnimationStore()
+  const { currentAnimation, setCurrentAnimation } = useAnimationStore()
   const { models } = useModelStore()
   const modelUrl = models[models.length - 1] || 'Duck.glb'
   const { scene, animations } = useGLTF(modelUrl)
@@ -21,16 +21,21 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { actions } = useAnimations(animations, group)
 
-  clone.traverse((child) => {
-    console.log(child)
-  })
-
   useEffect(() => {
     actions[currentAnimation]?.reset().fadeIn(0.5).play()
     return () => {
       actions[currentAnimation]?.fadeOut(0.5)
     }
   }, [currentAnimation])
+
+  useEffect(() => {
+    if (animations && animations.length > 0) {
+      console.log('Available animations:', animations.map(a => a.name))
+      setCurrentAnimation(animations[0].name)
+    } else {
+      console.log('No animations found in GLTF.')
+    }
+  }, [animations, setCurrentAnimation])
 
   return (
     <HandleTarget>

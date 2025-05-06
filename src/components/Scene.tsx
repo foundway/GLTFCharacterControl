@@ -18,7 +18,9 @@ const Scene = () => {
           ground: { height: 5, radius: 40, scale: 100 }
         } : { background: false })}
       />
-      <Character />
+      <group position={[0, 0, -1]}>
+        <Character />
+      </group>
       {!session && <OrbitControls target={[0, 0.5, -1]} />}
       {showGrid && (
         <group renderOrder={-1}>
