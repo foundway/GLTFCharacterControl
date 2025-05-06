@@ -21,6 +21,8 @@ export const Menu = () => {
   const LERP_SPEED = 4 
   const Y_OFFSET = -0.6
   const Z_OFFSET = 1
+  const [showAnimationsMenu, setShowAnimationsMenu] = useState(false)
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null)
 
   useFrame((_, delta) => {
     updateMenuPosition(delta)
@@ -57,6 +59,17 @@ export const Menu = () => {
     setIsMenuVisible(!isMenuVisible)
   }
 
+  const handleAnimationsMouseEnter = () => {
+    hoverTimer.current = setTimeout(() => {
+      setShowAnimationsMenu(true)
+    }, 300)
+  }
+
+  const handleAnimationsMouseLeave = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current)
+    setShowAnimationsMenu(false)
+  }
+
   setPreferredColorScheme("dark")
 
   if (!session) return null
@@ -65,8 +78,8 @@ export const Menu = () => {
     <group ref={groupRef} >
       <Root pixelSize={0.0015} flexDirection={"column"} alignItems={"center"} depthTest={false} depthWrite={false}>
         {isMenuVisible && (<Card 
-          borderWidth={0}
           positionType="absolute"
+          borderWidth={0}
           positionBottom={50}
           flexDirection="column" 
           alignItems="stretch"
@@ -78,10 +91,36 @@ export const Menu = () => {
           <Button onClick={toggleGrid} variant="ghost">
             <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
           </Button>
-          <Button onClick={() => {}} variant="ghost">
+          <Button
+            onClick={() => {}}
+            variant="ghost"
+            onPointerEnter={handleAnimationsMouseEnter}
+            onPointerLeave={handleAnimationsMouseLeave}
+          >
             <Text width={"100%"}>Animations</Text>
             <ChevronRight />
           </Button>
+          <Container flexDirection="row-reverse" >
+            <Container height={0} width={0} >
+              {showAnimationsMenu && (
+                <Card
+                  positionType="absolute"
+                  borderWidth={0}
+                  positionLeft={0}
+                  positionBottom={4}
+                  padding={4}
+                  width={200}
+                  onPointerEnter={handleAnimationsMouseEnter}
+                  onPointerLeave={handleAnimationsMouseLeave}
+                >
+                  <Button variant="ghost" />
+                  <Button variant="ghost" />
+                  <Button variant="ghost" />
+                  <Button variant="ghost" />
+                </Card>
+              )}
+            </Container>
+          </Container>
           <Button onClick={handleXRClick} variant="ghost">
             <Text width={"100%"}>Exit XR</Text>
           </Button>
