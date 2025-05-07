@@ -15,22 +15,19 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { actions } = useAnimations(animations, group)
 
-  useEffect(() => {
+  useEffect(() => { // Set animation list and play first animation on load
+    setAnimations(animations)
+    if (animations && animations.length > 0) {
+      setCurrentAnimation(animations[0].name)
+    } 
+  }, [animations, setAnimations, setCurrentAnimation])
+
+  useEffect(() => { // Change animation
     actions[currentAnimation]?.reset().fadeIn(0.5).play()
     return () => {
       actions[currentAnimation]?.fadeOut(0.5)
     }
   }, [currentAnimation])
-
-  useEffect(() => {
-    if (animations && animations.length > 0) {
-      setCurrentAnimation(animations[0].name)
-    } 
-  }, [animations, setCurrentAnimation])
-
-  useEffect(() => {
-    setAnimations(animations)
-  }, [animations, setAnimations])
 
   return (
     <HandleTarget>

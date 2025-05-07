@@ -8,11 +8,8 @@ interface AnimationState {
 }
 
 export const useAnimationStore = create<AnimationState>((set) => ({
-  currentAnimation: 'TRACK-idle',
-  setCurrentAnimation: (animationName) => {
-    set({ currentAnimation: animationName })
-    console.log('Animation changing to:', animationName)
-  },
+  currentAnimation: '',
+  setCurrentAnimation: (animationName) => set({ currentAnimation: animationName }),
   animations: [],
   setAnimations: (animations) => set({ animations }),
 })) 
