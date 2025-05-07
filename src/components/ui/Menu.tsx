@@ -7,22 +7,25 @@ import { Button, Card } from '@react-three/uikit-default'
 import { Menu as MenuIcon, ChevronDown, ChevronRight } from '@react-three/uikit-lucide'
 import { useXRStore } from '../../store/useXRStore'
 import { useSceneStore } from '../../store/useSceneStore'
+import { useAnimationStore } from '../../store/useAnimationStore'
 
 export const Menu = () => {
-  const { toggleXR } = useXRStore()
-  const { session } = useXR()
   const { camera } = useThree()
+  const { session } = useXR()
+  const { toggleXR } = useXRStore()
   const { showEnvironment, toggleEnvironment, showGrid, toggleGrid } = useSceneStore()
-  const [isMenuVisible, setIsMenuVisible] = useState(false)
+  const { animations, actions } = useAnimationStore()
   const groupRef = useRef<Group>(null)
+  const hoverTimer = useRef<NodeJS.Timeout | null>(null)
   const prevCameraForwardH = useRef(new Vector3())
   const prevTargetPosition = useRef(new Vector3())
+  const [isMenuVisible, setIsMenuVisible] = useState(false)
+  const [showAnimationsMenu, setShowAnimationsMenu] = useState(false)
   const ANGLE_THRESHOLD = 30
   const LERP_SPEED = 4 
   const Y_OFFSET = -0.6
   const Z_OFFSET = 1
-  const [showAnimationsMenu, setShowAnimationsMenu] = useState(false)
-  const hoverTimer = useRef<NodeJS.Timeout | null>(null)
+  const MENU_HOVER_DELAY = 300
 
   useFrame((_, delta) => {
     updateMenuPosition(delta)
@@ -62,7 +65,7 @@ export const Menu = () => {
   const handleAnimationsMouseEnter = () => {
     hoverTimer.current = setTimeout(() => {
       setShowAnimationsMenu(true)
-    }, 300)
+    }, MENU_HOVER_DELAY)
   }
 
   const handleAnimationsMouseLeave = () => {
@@ -79,7 +82,6 @@ export const Menu = () => {
       <Root pixelSize={0.0015} flexDirection={"column"} alignItems={"center"} depthTest={false} depthWrite={false}>
         {isMenuVisible && (<Card 
           positionType="absolute"
-          borderWidth={0}
           positionBottom={50}
           flexDirection="column" 
           alignItems="stretch"
@@ -91,34 +93,41 @@ export const Menu = () => {
           <Button onClick={toggleGrid} variant="ghost">
             <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
           </Button>
-          <Button
-            onClick={() => {}}
-            variant="ghost"
+          <Container 
+            flexDirection="row" 
+            alignItems="flex-end"
             onPointerEnter={handleAnimationsMouseEnter}
             onPointerLeave={handleAnimationsMouseLeave}
           >
-            <Text width={"100%"}>Animations</Text>
-            <ChevronRight />
-          </Button>
-          <Container flexDirection="row-reverse" >
-            <Container height={0} width={0} >
-              {showAnimationsMenu && (
-                <Card
-                  positionType="absolute"
-                  borderWidth={0}
-                  positionLeft={0}
-                  positionBottom={4}
-                  padding={4}
-                  width={200}
-                  onPointerEnter={handleAnimationsMouseEnter}
-                  onPointerLeave={handleAnimationsMouseLeave}
-                >
-                  <Button variant="ghost" />
-                  <Button variant="ghost" />
-                  <Button variant="ghost" />
-                  <Button variant="ghost" />
-                </Card>
-              )}
+            <Button onClick={() => {}} variant="ghost" >
+              <Text width={"100%"}>Animations</Text>
+              <ChevronRight />
+            </Button>
+            <Container width={0} height={0} >
+              {showAnimationsMenu && ( <Card 
+                positionType="absolute"
+                positionLeft={-12} 
+                positionBottom={0} 
+                padding={4}
+                margin={8}
+                width={200}
+              >
+                {animations && animations.length > 0 ? (
+                  animations.map((clip, _) => (
+                    <Button
+                      key={clip.name}
+                      variant="ghost"
+                      onClick={() => {
+                        actions[clip.name]?.reset().fadeIn(0.5).play()
+                      }}
+                    >
+                      <Text width="100%">{clip.name}</Text>
+                    </Button>
+                  ))
+                ) : (
+                  <Text width="100%" padding={8}>No Animation</Text>
+                )}
+              </Card>)}
             </Container>
           </Container>
           <Button onClick={handleXRClick} variant="ghost">
