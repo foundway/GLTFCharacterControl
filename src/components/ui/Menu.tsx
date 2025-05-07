@@ -14,7 +14,7 @@ export const Menu = () => {
   const { session } = useXR()
   const { toggleXR } = useXRStore()
   const { showEnvironment, toggleEnvironment, showGrid, toggleGrid } = useSceneStore()
-  const { animations, actions } = useAnimationStore()
+  const { animations, setCurrentAnimation } = useAnimationStore()
   const groupRef = useRef<Group>(null)
   const hoverTimer = useRef<NodeJS.Timeout | null>(null)
   const prevCameraForwardH = useRef(new Vector3())
@@ -113,13 +113,11 @@ export const Menu = () => {
                 width={200}
               >
                 {animations && animations.length > 0 ? (
-                  animations.map((clip, _) => (
+                  animations.map((clip) => (
                     <Button
                       key={clip.name}
                       variant="ghost"
-                      onClick={() => {
-                        actions[clip.name]?.reset().fadeIn(0.5).play()
-                      }}
+                      onClick={() => setCurrentAnimation(clip.name)}
                     >
                       <Text width="100%">{clip.name}</Text>
                     </Button>

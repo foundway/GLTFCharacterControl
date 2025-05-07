@@ -7,8 +7,7 @@ import { useModelStore } from '../store/useModelStore'
 import { Handle, HandleTarget } from '@react-three/handle'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
-  const { currentAnimation, setCurrentAnimation } = useAnimationStore()
-  const setAnimationData = useAnimationStore(state => state.setAnimationData)
+  const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { models } = useModelStore()
   const modelUrl = models[models.length - 1] || 'Duck.glb'
   const { scene, animations } = useGLTF(modelUrl)
@@ -25,16 +24,13 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   useEffect(() => {
     if (animations && animations.length > 0) {
-      console.log('Available animations:', animations.map(a => a.name))
       setCurrentAnimation(animations[0].name)
-    } else {
-      console.log('No animations found in GLTF.')
-    }
+    } 
   }, [animations, setCurrentAnimation])
 
   useEffect(() => {
-    setAnimationData(animations, actions)
-  }, [animations, actions, setAnimationData])
+    setAnimations(animations)
+  }, [animations, setAnimations])
 
   return (
     <HandleTarget>
@@ -46,5 +42,3 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
     </HandleTarget>
   )
 }
-
-
