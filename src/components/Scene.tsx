@@ -5,14 +5,14 @@ import { Menu } from './ui/Menu'
 import { useSceneStore } from '../store/useSceneStore'
 
 const Scene = () => {
-  const { showEnvironment, showGrid } = useSceneStore()
+  const { showEnvironment, showGrid, currentEnvironment } = useSceneStore()
   const { session } = useXR()
 
   return (
     <>
       <color attach="background" args={['#333333']} />
       <Environment
-        files="https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr"
+        files={currentEnvironment}
         {...(showEnvironment ? {
           background: true,
           ground: { height: 5, radius: 40, scale: 100 }
