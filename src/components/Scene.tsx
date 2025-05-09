@@ -1,11 +1,11 @@
 import { OrbitControls, Environment, Grid } from '@react-three/drei'
 import { useXR } from '@react-three/xr'
 import { Character } from './Character'
-import { Menu } from './ui/Menu'
+import { MainMenu } from './ui/MainMenu'
 import { useSceneStore } from '../store/useSceneStore'
 
 const Scene = () => {
-  const { showEnvironment, showGrid, currentEnvironment } = useSceneStore()
+  const { showBackground, showGrid, currentEnvironment } = useSceneStore()
   const { session } = useXR()
 
   return (
@@ -13,7 +13,7 @@ const Scene = () => {
       <color attach="background" args={['#333333']} />
       <Environment
         files={currentEnvironment}
-        {...(showEnvironment ? {
+        {...(showBackground ? {
           background: true,
           ground: { height: 5, radius: 40, scale: 100 }
         } : { background: false })}
@@ -37,7 +37,7 @@ const Scene = () => {
           />
         </group>
       )}
-      <Menu />
+      <MainMenu />
     </>
   )
 }

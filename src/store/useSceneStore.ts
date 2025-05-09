@@ -1,10 +1,10 @@
 import { create } from 'zustand'
 
 interface SceneState {
-  showEnvironment: boolean
+  showBackground: boolean
   showGrid: boolean
   currentEnvironment: string
-  toggleEnvironment: () => void
+  toggleBackground: () => void
   toggleGrid: () => void
   setEnvironment: (environment: string) => void
 }
@@ -19,10 +19,10 @@ const ENVIRONMENTS = {
 }
 
 export const useSceneStore = create<SceneState>((set) => ({
-  showEnvironment: true,
+  showBackground: true,
   showGrid: false,
   currentEnvironment: ENVIRONMENTS["Hall"],
-  toggleEnvironment: () => set((state) => ({ showEnvironment: !state.showEnvironment })),
+  toggleBackground: () => set((state) => ({ showBackground: !state.showBackground })),
   toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
   setEnvironment: (environment: string) => set({ currentEnvironment: environment }),
 }))

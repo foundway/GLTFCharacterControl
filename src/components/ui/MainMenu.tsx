@@ -2,19 +2,17 @@ import { useState, useRef } from 'react'
 import { Vector3, Group } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useXR } from '@react-three/xr'
-import { Root, Text, setPreferredColorScheme, Container} from '@react-three/uikit'
+import { Root, Text, setPreferredColorScheme } from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
 import { Menu as MenuIcon, ChevronDown } from '@react-three/uikit-lucide'
 import { useXRStore } from '../../store/useXRStore'
-import { useSceneStore } from '../../store/useSceneStore'
 import { EnvironmentMenu } from './EnvironmentMenu'
 import { AnimationMenu } from './AnimationMenu'
 
-export const Menu = () => {
+export const MainMenu = () => {
   const { camera } = useThree()
   const { session } = useXR()
   const { toggleXR } = useXRStore()
-  const { showEnvironment, toggleEnvironment, showGrid, toggleGrid } = useSceneStore()
   const groupRef = useRef<Group>(null)
   const prevCameraForwardH = useRef(new Vector3())
   const prevTargetPosition = useRef(new Vector3())
@@ -73,12 +71,6 @@ export const Menu = () => {
           alignItems="stretch"
           padding={4}
         >
-          <Button onClick={toggleGrid} variant="ghost">
-            <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
-          </Button>
-          <Button onClick={toggleEnvironment} variant="ghost">
-            <Text width={"100%"}>{showEnvironment ? 'Hide Environment' : 'Show Environment'}</Text>
-          </Button>
           <EnvironmentMenu />
           <AnimationMenu />
           <Button onClick={handleXRClick} variant="ghost">

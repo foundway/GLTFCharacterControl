@@ -7,7 +7,7 @@ import { useSceneStore, ENVIRONMENTS } from '../../store/useSceneStore'
 export const EnvironmentMenu = () => {
   const [showEnvironmentsMenu, setShowEnvironmentsMenu] = useState(false)
   const hoverTimer = useRef<NodeJS.Timeout | null>(null)
-  const { setEnvironment, currentEnvironment } = useSceneStore()
+  const { setEnvironment, currentEnvironment, showBackground, toggleBackground, showGrid, toggleGrid } = useSceneStore()
   const MENU_HOVER_DELAY = 300
 
   const handleEnvironmentsMouseEnter = () => {
@@ -41,18 +41,27 @@ export const EnvironmentMenu = () => {
           margin={8}
           width={200}
         >
-          {Object.entries(ENVIRONMENTS).map(([name, url]) => (
-            <Button
-              key={name}
-              variant="ghost"
-              gap={8}
-              alignItems="center"
-              onClick={() => setEnvironment(url)}
+          <Button onClick={toggleBackground} variant="ghost" gap={8}>
+            <Container width={24} />
+            <Text width={"100%"}>{showBackground ? 'Hide Background' : 'Show Background'}</Text>
+          </Button>
+          <Container height={1} width={"100%"} backgroundColor={"#eee"}/>
+          {Object.entries(ENVIRONMENTS).map(([name, url]) => ( <Button
+            key={name}
+            variant="ghost"
+            gap={8}
+            alignItems="center"
+            onClick={() => setEnvironment(url)}
             >
             {currentEnvironment === url ? <Check /> : <Container width={24} />}
             <Text width="100%">{name}</Text>
-            </Button>
+          </Button>
           ))}
+          <Container height={1} width={"100%"} backgroundColor={"#eee"}/>
+          <Button onClick={toggleGrid} variant="ghost" gap={8}>
+            <Container width={24} />
+            <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
+          </Button>
         </Card>)}
       </Container>
     </Container>
