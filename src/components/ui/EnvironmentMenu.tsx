@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
 import { Check, ChevronRight } from '@react-three/uikit-lucide'
-import { useSceneStore, ENVIRONMENTS } from '../../store/useSceneStore'
+import { useSceneStore, Environments } from '../../store/useSceneStore'
 
 export const EnvironmentMenu = () => {
   const [showEnvironmentsMenu, setShowEnvironmentsMenu] = useState(false)
@@ -46,7 +46,7 @@ export const EnvironmentMenu = () => {
             <Text width={"100%"}>{showBackground ? 'Hide Background' : 'Show Background'}</Text>
           </Button>
           <Container height={1} width={"100%"} backgroundColor={"#eee"}/>
-          {Object.entries(ENVIRONMENTS).map(([name, url]) => ( <Button
+          {Object.entries(Environments).map(([name, url]) => ( <Button
             key={name}
             variant="ghost"
             gap={8}

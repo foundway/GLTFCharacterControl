@@ -9,7 +9,7 @@ interface SceneState {
   setEnvironment: (environment: string) => void
 }
 
-const ENVIRONMENTS = {
+const Environments = {
   "Hall": 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/dancing_hall_2k.hdr',
   "Airport": 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/rostock_laage_airport_2k.hdr',
   "Hanger": 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/small_hangar_01_2k.hdr',
@@ -21,10 +21,10 @@ const ENVIRONMENTS = {
 export const useSceneStore = create<SceneState>((set) => ({
   showBackground: true,
   showGrid: false,
-  currentEnvironment: ENVIRONMENTS["Hall"],
+  currentEnvironment: Environments["Hall"],
   toggleBackground: () => set((state) => ({ showBackground: !state.showBackground })),
   toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
   setEnvironment: (environment: string) => set({ currentEnvironment: environment }),
 }))
 
-export { ENVIRONMENTS } 
+export { Environments } 
