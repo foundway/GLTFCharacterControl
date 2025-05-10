@@ -5,7 +5,6 @@ import { useXR } from '@react-three/xr'
 import { Root, Text, setPreferredColorScheme } from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
 import { Menu as MenuIcon, ChevronDown } from '@react-three/uikit-lucide'
-import { useXRStore } from '../../store/useXRStore'
 import { EnvironmentMenu } from './EnvironmentMenu'
 import { AnimationMenu } from './AnimationMenu'
 import { GeometryMenu } from './GeometryMenu'
@@ -14,7 +13,6 @@ import { Separator } from './Separator'
 export const MainMenu = () => {
   const { camera } = useThree()
   const { session } = useXR()
-  const { toggleXR } = useXRStore()
   const groupRef = useRef<Group>(null)
   const prevCameraForwardH = useRef(new Vector3())
   const prevTargetPosition = useRef(new Vector3())
@@ -48,11 +46,7 @@ export const MainMenu = () => {
   }
 
   const handleXRClick = () => {
-    if (session) {
-      session.end()
-    } else {
-      toggleXR()
-    }
+    session?.end()
   }
 
   const toggleMenu = () => {
