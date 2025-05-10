@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
 import { Button, Card, Slider } from '@react-three/uikit-default'
 import { ChevronRight } from '@react-three/uikit-lucide'
-import { useScale } from '../../context/ScaleContext'
+import { useScale } from '../../context/AppContext'
 
 export const GeometryMenu = () => {
   const [showGeometryMenu, setShowGeometryMenu] = useState(false)

@@ -4,7 +4,7 @@ import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
 import { useModelStore } from './store/useModelStore'
-import { ScaleProvider } from './context/ScaleContext'
+import { AppContextProvider } from './context/AppContext'
 
 const App = () => {
   const { addModel } = useModelStore()
@@ -22,7 +22,7 @@ const App = () => {
   }
 
   return (
-    <ScaleProvider>
+    <AppContextProvider>
       <div style={{ width: '100vw', height: '100vh' }}>
         <Canvas 
           shadows 
@@ -48,7 +48,7 @@ const App = () => {
           </Button>
         </div>
       </div>
-    </ScaleProvider>
+    </AppContextProvider>
   )
 }
 
