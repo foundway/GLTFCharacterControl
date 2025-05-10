@@ -8,6 +8,8 @@ import { Menu as MenuIcon, ChevronDown } from '@react-three/uikit-lucide'
 import { useXRStore } from '../../store/useXRStore'
 import { EnvironmentMenu } from './EnvironmentMenu'
 import { AnimationMenu } from './AnimationMenu'
+import { GeometryMenu } from './GeometryMenu'
+import { Separator } from './Separator'
 
 export const MainMenu = () => {
   const { camera } = useThree()
@@ -73,11 +75,13 @@ export const MainMenu = () => {
         >
           <EnvironmentMenu />
           <AnimationMenu />
+          <GeometryMenu />
+          <Separator />
           <Button onClick={handleXRClick} variant="ghost">
             <Text width={"100%"}>Exit XR</Text>
           </Button>
         </Card>)}
-        <Button onClick={toggleMenu} variant="secondary" size="icon" >
+        <Button onClick={toggleMenu} variant="secondary" size="icon" borderRadius={100} >
           {isMenuVisible ? <ChevronDown /> : <MenuIcon />}
         </Button>
       </Root>

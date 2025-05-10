@@ -4,11 +4,13 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import { useAnimationStore } from '../store/useAnimationStore'
 import { useModelStore } from '../store/useModelStore'
+import { useScale } from '../context/ScaleContext'
 import { Handle, HandleTarget } from '@react-three/handle'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { models } = useModelStore()
+  const { scale } = useScale()
   const modelUrl = models[models.length - 1] || 'Duck.glb'
   const { scene, animations } = useGLTF(modelUrl)
   const group = React.useRef<THREE.Group>(null)
@@ -31,7 +33,7 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   return (
     <HandleTarget>
-      <group ref={group} {...props} dispose={null} renderOrder={-100}>
+      <group ref={group} {...props} dispose={null} renderOrder={-100} scale={scale}>
         <Handle translate={{ x: true, y: true, z: true }} scale={false} >
           <primitive object={clone} />
         </Handle>
