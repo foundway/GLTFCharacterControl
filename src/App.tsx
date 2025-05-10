@@ -3,15 +3,11 @@ import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
-import { useModelStore } from './store/useModelStore'
+import { useModels, AppContextProvider } from './context/AppContext'
 
-const App = () => {
-  const { addModel } = useModelStore()
+const UploadButton = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const store = createXRStore({
-    bounded: false
-  })
-
+  const { addModel } = useModels()
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -19,33 +15,46 @@ const App = () => {
       addModel(url)
     }
   }
+  return (
+    <>
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".glb"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+      <Button onClick={() => fileInputRef.current?.click()}>
+        Load GLB Model
+      </Button>
+    </>
+  )
+}
+
+const App = () => {
+  const store = createXRStore({
+    bounded: false
+  })
 
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
-      <Canvas 
-        shadows 
-        camera={{ position: [0, 1, 0], fov: 50 }}
-      >
-        <XR store={store}>
-          <Scene />
-        </XR>
-      </Canvas>
-      <div className="absolute top-8 left-8 flex flex-col gap-2">
-        <input
-          type="file"
-          ref={fileInputRef}
-          accept=".glb"
-          onChange={handleFileUpload}
-          className="hidden"
-        />
-        <Button onClick={() => fileInputRef.current?.click()}>
-          Load GLB Model
-        </Button>
-        <Button onClick={() => store.enterAR()}>
-          Enter XR
-        </Button>
+    <AppContextProvider>
+      <div style={{ width: '100vw', height: '100vh' }}>
+        <Canvas
+          shadows
+          camera={{ position: [0, 1, 0], fov: 50 }}
+        >
+          <XR store={store}>
+            <Scene />
+          </XR>
+        </Canvas>
+        <div className="absolute top-8 left-8 flex flex-col gap-2">
+          <UploadButton />
+          <Button onClick={() => store.enterAR()}>
+            Enter XR
+          </Button>
+        </div>
       </div>
-    </div>
+    </AppContextProvider>
   )
 }
 

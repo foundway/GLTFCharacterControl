@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Environment as DreiEnvironment } from '@react-three/drei'
-import { useSceneStore } from '../store/useSceneStore'
+import { useSceneStore } from '../store/SceneStore'
 
 const EnvironmentContent = () => {
   const { currentEnvironment, showBackground } = useSceneStore()

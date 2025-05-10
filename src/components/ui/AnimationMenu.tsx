@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
 import { ChevronRight } from '@react-three/uikit-lucide'
-import { useAnimationStore } from '../../store/useAnimationStore'
+import { useAnimationStore } from '../../store/AnimationStore'
 
 export const AnimationMenu = () => {
   const [showAnimationsMenu, setShowAnimationsMenu] = useState(false)

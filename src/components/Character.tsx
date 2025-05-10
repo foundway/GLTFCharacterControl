@@ -2,15 +2,15 @@ import * as THREE from 'three'
 import React, { JSX, useEffect } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
-import { useAnimationStore } from '../store/useAnimationStore'
-import { useModelStore } from '../store/useModelStore'
+import { useAnimationStore } from '../store/AnimationStore'
 import { Handle, HandleTarget } from '@react-three/handle'
-import { useScale } from '../context/AppContext'
+import { useModels } from '../context/AppContext'
+import { useModelStore } from '../store/ModelStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
-  const { models } = useModelStore()
-  const { scale } = useScale()
+  const { models } = useModels()
+  const { scale } = useModelStore()
   const modelUrl = models[models.length - 1] || 'Duck.glb'
   const { scene, animations } = useGLTF(modelUrl)
   const group = React.useRef<THREE.Group>(null)

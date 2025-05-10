@@ -2,12 +2,14 @@ import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
 import { Button, Card, Slider } from '@react-three/uikit-default'
 import { ChevronRight } from '@react-three/uikit-lucide'
-import { useScale } from '../../context/AppContext'
+// import { useScale } from '../../context/AppContext'
+import {useModelStore } from "../../store/ModelStore"
 
 export const GeometryMenu = () => {
   const [showGeometryMenu, setShowGeometryMenu] = useState(false)
   const hoverTimer = useRef<NodeJS.Timeout | null>(null)
-  const { scale, setScale } = useScale()
+  // const { scale, setScale } = useScale()
+  const { scale, setScale } = useModelStore()
   const MENU_HOVER_DELAY = 300
 
   const handleGeometryMouseEnter = () => {

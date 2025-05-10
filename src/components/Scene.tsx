@@ -2,7 +2,7 @@ import { OrbitControls, Grid } from '@react-three/drei'
 import { useXR } from '@react-three/xr'
 import { Character } from './Character'
 import { MainMenu } from './ui/MainMenu'
-import { useSceneStore } from '../store/useSceneStore'
+import { useSceneStore } from '../store/SceneStore'
 import { Environment } from './Environment'
 
 const Scene = () => {

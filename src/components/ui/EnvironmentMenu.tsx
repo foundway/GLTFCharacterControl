@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
 import { Button, Card } from '@react-three/uikit-default'
 import { Check, ChevronRight } from '@react-three/uikit-lucide'
-import { useSceneStore, Environments } from '../../store/useSceneStore'
+import { useSceneStore, Environments } from '../../store/SceneStore'
 import { Separator } from './Separator'
 
 export const EnvironmentMenu = () => {
