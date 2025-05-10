@@ -4,7 +4,6 @@ import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
 import { useModelStore } from './store/useModelStore'
-import { AppContextProvider } from './context/AppContext'
 
 const App = () => {
   const { addModel } = useModelStore()
@@ -22,33 +21,31 @@ const App = () => {
   }
 
   return (
-    <AppContextProvider>
-      <div style={{ width: '100vw', height: '100vh' }}>
-        <Canvas 
-          shadows 
-          camera={{ position: [0, 1, 0], fov: 50 }}
-        >
-          <XR store={store}>
-            <Scene />
-          </XR>
-        </Canvas>
-        <div className="absolute top-8 left-8 flex flex-col gap-2">
-          <input
-            type="file"
-            ref={fileInputRef}
-            accept=".glb"
-            onChange={handleFileUpload}
-            className="hidden"
-          />
-          <Button onClick={() => fileInputRef.current?.click()}>
-            Load GLB Model
-          </Button>
-          <Button onClick={() => store.enterAR()}>
-            Enter XR
-          </Button>
-        </div>
+    <div style={{ width: '100vw', height: '100vh' }}>
+      <Canvas 
+        shadows 
+        camera={{ position: [0, 1, 0], fov: 50 }}
+      >
+        <XR store={store}>
+          <Scene />
+        </XR>
+      </Canvas>
+      <div className="absolute top-8 left-8 flex flex-col gap-2">
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept=".glb"
+          onChange={handleFileUpload}
+          className="hidden"
+        />
+        <Button onClick={() => fileInputRef.current?.click()}>
+          Load GLB Model
+        </Button>
+        <Button onClick={() => store.enterAR()}>
+          Enter XR
+        </Button>
       </div>
-    </AppContextProvider>
+    </div>
   )
 }
 
