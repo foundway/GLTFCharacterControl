@@ -37,7 +37,7 @@ export const EnvironmentMenu = () => {
         {showEnvironmentsMenu && ( <Card 
           positionType="absolute"
           positionLeft={-12} 
-          positionBottom={0} 
+          positionBottom={-8} 
           padding={4}
           margin={8}
           width={200}

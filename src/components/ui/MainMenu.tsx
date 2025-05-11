@@ -59,7 +59,12 @@ export const MainMenu = () => {
 
   return (
     <group ref={groupRef} >
-      <Root pixelSize={0.0015} flexDirection={"column"} alignItems={"center"} depthTest={false} depthWrite={false}>
+      <Root pixelSize={0.0015} 
+        flexDirection={"column"} 
+        alignItems={"center"} 
+        depthTest={false} 
+        depthWrite={false}
+      >
         {isMenuVisible && (<Card 
           positionType="absolute"
           positionBottom={50}
