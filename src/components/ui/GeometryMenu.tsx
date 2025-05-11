@@ -1,57 +1,34 @@
 import { useState, useRef } from 'react'
-import { Container, Input, Text } from '@react-three/uikit'
-import { Button, Card, Slider } from '@react-three/uikit-default'
+import * as THREE from 'three'
+import { Container, Text } from '@react-three/uikit'
+import { Button, Card, Separator, Slider } from '@react-three/uikit-default'
 import { ChevronRight } from '@react-three/uikit-lucide'
-import validator from 'validator'
 import { useModelStore } from "../../store/ModelStore"
+import { useThree } from '@react-three/fiber'
 
 const InputSlider = () => {
-  const ref = useRef<any>(null)
-  const [hasValidNumber, setValidNumber] = useState(true)
-  const [inputValue, setInputValue] = useState("1")
   const { scale, setScale } = useModelStore()
   return (
-    <>
-      <Container alignItems="center" gap={12}>
-        <Container flexDirection="row" width={30} overflow="hidden" >
-          <Input
-            ref={ref} width="100%" height="100%"
-            value={inputValue}
-            backgroundColor={hasValidNumber ? undefined : "#411"}
-            onValueChange={(value) => {
-              setInputValue(value)
-              if (validator.isFloat(value, { min: 0.1, max: 100 })) {
-                setScale(parseFloat(value));
-                setValidNumber(true);
-              } else {
-                setValidNumber(false)
-              }
-            }}
-            onFocusChange={(focus) => {
-              if (focus) {
-                setInputValue("")
-                ref.current.selectionColor = "#000"
-              }
-            }}
-          />
-        </Container>
+    <Container flexDirection="column" marginTop={0} marginLeft={12} marginRight={12} marginBottom={8}>
+      <Text paddingBottom={16} fontWeight="bold" fontSize={14}>Scale</Text>
+      <Container alignItems="center" gap={12} paddingRight={12}>
+        <Text width={40} textAlign="left">{scale.toFixed(2)}</Text>
         <Slider
           min={0.1} max={3} step={0.01} width={120} value={scale}
           onValueChange={(value) => {
             setScale(value)
-            setInputValue(value.toFixed(2))
-            setValidNumber(true)
-            ref.current.blur()
           }}
         />
       </Container>
-    </>
+    </Container>
   )
 }
 
 export const GeometryMenu = () => {
   const [showGeometryMenu, setShowGeometryMenu] = useState(false)
   const hoverTimer = useRef<NodeJS.Timeout | null>(null)
+  const { setScale } = useModelStore()
+  const { scene } = useThree()
   const MENU_HOVER_DELAY = 300
 
   const handlePointerEnter = () => {
@@ -63,6 +40,16 @@ export const GeometryMenu = () => {
   const handlePointerLeave = () => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current)
     setShowGeometryMenu(false)
+  }
+
+  const resetTransformation = () => {
+    setScale(1)
+    scene.traverse((object) => {
+      if (object instanceof THREE.Object3D && object.userData.isCharacter) {
+        object.parent?.position.set(0, 0, 0)
+        object.parent?.rotation.set(0, 0, 0)
+      }
+    })
   }
 
   return (
@@ -85,6 +72,10 @@ export const GeometryMenu = () => {
           margin={8}
         >
           <InputSlider />
+          <Separator />
+          <Button variant="ghost" onClick={resetTransformation}>
+            <Text width={"100%"}>Reset Transformation</Text>
+          </Button>
         </Card>)}
       </Container>
     </Container>

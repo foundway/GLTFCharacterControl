@@ -33,9 +33,9 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   return (
     <HandleTarget>
-      <group ref={group} {...props} dispose={null} renderOrder={-100} scale={scale}>
+      <group ref={group} {...props} dispose={null} renderOrder={-100} >
         <Handle translate={{ x: true, y: true, z: true }} scale={false} >
-          <primitive object={clone} />
+          <primitive object={clone} scale={scale} userData={{ isCharacter: true }}/>
         </Handle>
       </group>
     </HandleTarget>

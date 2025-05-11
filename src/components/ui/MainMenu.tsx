@@ -19,7 +19,7 @@ export const MainMenu = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false)
   const ANGLE_THRESHOLD = 30
   const LERP_SPEED = 4 
-  const Y_OFFSET = -0.6
+  const Y_OFFSET = -0.7
   const Z_OFFSET = 1
 
   useFrame((_, delta) => {
@@ -72,9 +72,9 @@ export const MainMenu = () => {
           alignItems="stretch"
           padding={4}
         >
-          <EnvironmentMenu />
-          <AnimationMenu />
           <GeometryMenu />
+          <AnimationMenu />
+          <EnvironmentMenu />
           <Separator />
           <Button onClick={handleXRClick} variant="ghost">
             <Text width={"100%"}>Exit XR</Text>
