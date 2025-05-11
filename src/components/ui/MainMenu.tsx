@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Vector3, Group } from 'three'
+import { Object3D, Vector3, Group } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useXR } from '@react-three/xr'
 import { Root, Text, setPreferredColorScheme } from '@react-three/uikit'
@@ -9,14 +9,16 @@ import { EnvironmentMenu } from './EnvironmentMenu'
 import { AnimationMenu } from './AnimationMenu'
 import { GeometryMenu } from './GeometryMenu'
 import { Separator } from './Separator'
+import { useModelStore } from '@/store/ModelStore'
 
 export const MainMenu = () => {
-  const { camera } = useThree()
+  const { scene, camera } = useThree()
   const { session } = useXR()
   const groupRef = useRef<Group>(null)
   const prevCameraForwardH = useRef(new Vector3())
   const prevTargetPosition = useRef(new Vector3())
   const [isMenuVisible, setIsMenuVisible] = useState(false)
+  const { setScale } = useModelStore()
   const ANGLE_THRESHOLD = 30
   const LERP_SPEED = 4 
   const Y_OFFSET = -0.7
@@ -46,11 +48,22 @@ export const MainMenu = () => {
   }
 
   const handleXRClick = () => {
+    resetTransformation()
     session?.end()
   }
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible)
+  }
+
+  const resetTransformation = () => {
+    setScale(1)
+    scene.traverse((object) => {
+      if (object instanceof Object3D && object.userData.isCharacter) {
+        object.parent?.position.set(0, 0, 0)
+        object.parent?.rotation.set(0, 0, 0)
+      }
+    })
   }
 
   setPreferredColorScheme("dark")

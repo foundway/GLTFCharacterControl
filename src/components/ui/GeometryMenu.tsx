@@ -27,8 +27,8 @@ const InputSlider = () => {
 export const GeometryMenu = () => {
   const [showGeometryMenu, setShowGeometryMenu] = useState(false)
   const hoverTimer = useRef<NodeJS.Timeout | null>(null)
-  const { setScale } = useModelStore()
   const { scene } = useThree()
+  const { setScale } = useModelStore()
   const MENU_HOVER_DELAY = 300
 
   const handlePointerEnter = () => {
