@@ -4,8 +4,13 @@ import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
 import Scene from './components/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
+import { BsHeadsetVr } from "react-icons/bs";
+import { MdOutlineFileUpload } from "react-icons/md";
 
-const UploadButton = () => {
+
+
+
+const UploadButton = ({ className = "" }: { className?: string }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { addModel } = useModels()
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,8 +29,12 @@ const UploadButton = () => {
         onChange={handleFileUpload}
         className="hidden"
       />
-      <Button onClick={() => fileInputRef.current?.click()}>
-        Load GLB Model
+      <Button 
+        className="absolute bottom-8 left-8 rounded-full gap-1 p-6"
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <MdOutlineFileUpload size={20} />
+        Load GLB
       </Button>
     </>
   )
@@ -47,12 +56,13 @@ const App = () => {
             <Scene />
           </XR>
         </Canvas>
-        <div className="absolute top-8 left-8 flex flex-col gap-2">
-          <UploadButton />
-          <Button onClick={() => store.enterAR()}>
-            Enter XR
-          </Button>
-        </div>
+        <UploadButton />
+        <Button 
+          className="absolute bottom-8 right-8 rounded-full gap-3 p-6" 
+          onClick={() => store.enterAR()}>
+          <BsHeadsetVr size={20} />
+          Enter XR
+        </Button>
       </div>
     </AppContextProvider>
   )
