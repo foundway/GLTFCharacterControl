@@ -7,10 +7,7 @@ import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
 
-
-
-
-const UploadButton = ({ className = "" }: { className?: string }) => {
+const UploadButton = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { addModel } = useModels()
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
