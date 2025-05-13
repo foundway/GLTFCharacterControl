@@ -12,6 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.2.4",
     "@radix-ui/react-slot": "^1.2.0",
     "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
