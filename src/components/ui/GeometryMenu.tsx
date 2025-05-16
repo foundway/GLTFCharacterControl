@@ -1,10 +1,10 @@
-import { useState, useRef } from 'react'
 import * as THREE from 'three'
 import { Container, Text } from '@react-three/uikit'
-import { Button, Card, Separator, Slider } from '@react-three/uikit-default'
-import { ChevronRight } from '@react-three/uikit-lucide'
+import { Button, Slider } from '@react-three/uikit-default'
 import { useModelStore } from "../../store/ModelStore"
 import { useThree } from '@react-three/fiber'
+import { SubMenu } from './SubMenu'
+import { Separator } from './Separator'
 
 const InputSlider = () => {
   const { scale, setScale } = useModelStore()
@@ -25,22 +25,8 @@ const InputSlider = () => {
 }
 
 export const GeometryMenu = () => {
-  const [showGeometryMenu, setShowGeometryMenu] = useState(false)
-  const hoverTimer = useRef<NodeJS.Timeout | null>(null)
   const { scene } = useThree()
   const { setScale } = useModelStore()
-  const MENU_HOVER_DELAY = 300
-
-  const handlePointerEnter = () => {
-    hoverTimer.current = setTimeout(() => {
-      setShowGeometryMenu(true)
-    }, MENU_HOVER_DELAY)
-  }
-
-  const handlePointerLeave = () => {
-    if (hoverTimer.current) clearTimeout(hoverTimer.current)
-    setShowGeometryMenu(false)
-  }
 
   const resetTransformation = () => {
     setScale(1)
@@ -53,31 +39,12 @@ export const GeometryMenu = () => {
   }
 
   return (
-    <Container
-      flexDirection="row"
-      alignItems="flex-end"
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-    >
-      <Button variant="ghost" >
-        <Text width={"100%"}>Geometry</Text>
-        <ChevronRight />
+    <SubMenu title="Geometry" cardPadding={12}>
+      <InputSlider />
+      <Separator />
+      <Button variant="ghost" onClick={resetTransformation}>
+        <Text width={"100%"}>Reset Transformation</Text>
       </Button>
-      <Container width={0} height={0} >
-        {showGeometryMenu && (<Card
-          positionType="absolute"
-          positionLeft={-12}
-          positionBottom={-8}
-          padding={12}
-          margin={8}
-        >
-          <InputSlider />
-          <Separator />
-          <Button variant="ghost" onClick={resetTransformation}>
-            <Text width={"100%"}>Reset Transformation</Text>
-          </Button>
-        </Card>)}
-      </Container>
-    </Container>
+    </SubMenu>
   )
 } 

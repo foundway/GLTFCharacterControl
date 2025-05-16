@@ -1,70 +1,37 @@
-import { useState, useRef } from 'react'
 import { Container, Text } from '@react-three/uikit'
-import { Button, Card } from '@react-three/uikit-default'
-import { Check, ChevronRight } from '@react-three/uikit-lucide'
+import { Button } from '@react-three/uikit-default'
+import { Check } from '@react-three/uikit-lucide'
 import { useSceneStore, Environments } from '../../store/SceneStore'
 import { Separator } from './Separator'
+import { SubMenu } from './SubMenu'
 
 export const EnvironmentMenu = () => {
-  const [showEnvironmentsMenu, setShowEnvironmentsMenu] = useState(false)
-  const hoverTimer = useRef<NodeJS.Timeout | null>(null)
   const { setEnvironment, currentEnvironment, showBackground, toggleBackground, showGrid, toggleGrid } = useSceneStore()
-  const MENU_HOVER_DELAY = 300
-
-  const handleEnvironmentsMouseEnter = () => {
-    hoverTimer.current = setTimeout(() => {
-      setShowEnvironmentsMenu(true)
-    }, MENU_HOVER_DELAY)
-  }
-
-  const handleEnvironmentsMouseLeave = () => {
-    if (hoverTimer.current) clearTimeout(hoverTimer.current)
-    setShowEnvironmentsMenu(false)
-  }
 
   return (
-    <Container 
-      flexDirection="row" 
-      alignItems="flex-end"
-      onPointerEnter={handleEnvironmentsMouseEnter}
-      onPointerLeave={handleEnvironmentsMouseLeave}
-    >
-      <Button variant="ghost" >
-        <Text width={"100%"}>Environments</Text>
-        <ChevronRight />
+    <SubMenu title="Environments">
+      <Button onClick={toggleBackground} variant="ghost" gap={8}>
+        <Container width={24} />
+        <Text width={"100%"}>{showBackground ? 'Hide Background' : 'Show Background'}</Text>
       </Button>
-      <Container width={0} height={0} >
-        {showEnvironmentsMenu && ( <Card 
-          positionType="absolute"
-          positionLeft={-12} 
-          positionBottom={-8} 
-          padding={4}
-          margin={8}
-          width={200}
+      <Separator />
+      {Object.entries(Environments).map(([name, url]) => (
+        <Button
+          key={name}
+          variant="ghost"
+          gap={8}
+          alignItems="center"
+          onClick={() => setEnvironment(url)}
         >
-          <Button onClick={toggleBackground} variant="ghost" gap={8}>
-            <Container width={24} />
-            <Text width={"100%"}>{showBackground ? 'Hide Background' : 'Show Background'}</Text>
-          </Button>
-          <Separator />
-          {Object.entries(Environments).map(([name, url]) => ( <Button
-            key={name}
-            variant="ghost"
-            gap={8}
-            alignItems="center"
-            onClick={() => setEnvironment(url)}
-          >
-            {currentEnvironment === url ? <Check /> : <Container width={24} />}
-            <Text width="100%">{name}</Text>
-          </Button>
-          ))}
-          <Separator />
-          <Button onClick={toggleGrid} variant="ghost" gap={8}>
-            <Container width={24} />
-            <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
-          </Button>
-        </Card>)}
-      </Container>
-    </Container>
+          {currentEnvironment === url ? <Check /> : <Container width={24} />}
+          <Text width="100%">{name}</Text>
+        </Button>
+      ))}
+      <Separator />
+      <Button onClick={toggleGrid} variant="ghost" gap={8}>
+        <Container width={24} />
+        <Text width={"100%"}>{showGrid ? 'Hide Grid' : 'Show Grid'}</Text>
+      </Button>
+    </SubMenu>
   )
 } 
