@@ -24,6 +24,22 @@ const InputSlider = () => {
   )
 }
 
+const ControlMode = () => {
+  return (
+    <Container flexDirection="row" gap={8}>
+      <Button variant="ghost">
+        <Text width="100%">Static</Text>
+      </Button>
+      <Button variant="ghost">
+        <Text width="100%">Steer</Text>
+      </Button>
+      <Button variant="ghost">
+        <Text width="100%">Direct</Text>
+      </Button>
+    </Container>
+  )
+}
+
 export const GeometryMenu = () => {
   const { scene } = useThree()
   const { setScale } = useModelStore()
@@ -40,6 +56,8 @@ export const GeometryMenu = () => {
 
   return (
     <SubMenu title="Geometry" cardPadding={12}>
+      <ControlMode />
+      <Separator />
       <InputSlider />
       <Separator />
       <Button variant="ghost" onClick={resetTransformation}>

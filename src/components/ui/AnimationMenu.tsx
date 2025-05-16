@@ -1,10 +1,11 @@
 import { Container, Text } from '@react-three/uikit'
 import { Button } from '@react-three/uikit-default'
+import { Check } from '@react-three/uikit-lucide'
 import { useAnimationStore } from '../../store/AnimationStore'
 import { SubMenu } from './SubMenu'
 
 export const AnimationMenu = () => {
-  const { animations, setCurrentAnimation } = useAnimationStore()
+  const { animations, setCurrentAnimation, currentAnimation } = useAnimationStore()
 
   return (
     <SubMenu title="Animations">
@@ -13,8 +14,11 @@ export const AnimationMenu = () => {
           <Button
             key={clip.name}
             variant="ghost"
+            gap={4}
+            alignItems="center"
             onClick={() => setCurrentAnimation(clip.name)}
           >
+            {currentAnimation === clip.name ? <Check width={16} /> : <Container width={16} />}
             <Text width="100%">{clip.name}</Text>
           </Button>
         ))
