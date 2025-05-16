@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { Container, Text } from '@react-three/uikit'
-import { Button, Slider } from '@react-three/uikit-default'
+import { Container, Text, } from '@react-three/uikit'
+import { Button, Slider, Checkbox, Label } from '@react-three/uikit-default'
 import { useModelStore } from "../../store/ModelStore"
 import { useThree } from '@react-three/fiber'
 import { SubMenu } from './SubMenu'
@@ -10,7 +10,7 @@ const InputSlider = () => {
   const { scale, setScale } = useModelStore()
   return (
     <Container flexDirection="column" marginTop={0} marginLeft={12} marginRight={12} marginBottom={8}>
-      <Text paddingBottom={16} fontWeight="bold" fontSize={14}>Scale</Text>
+      <Text paddingBottom={16} fontWeight="bold" fontSize={10}>Scale</Text>
       <Container alignItems="center" gap={12} paddingRight={12}>
         <Text width={40} textAlign="left">{scale.toFixed(2)}</Text>
         <Slider
@@ -20,22 +20,6 @@ const InputSlider = () => {
           }}
         />
       </Container>
-    </Container>
-  )
-}
-
-const ControlMode = () => {
-  return (
-    <Container flexDirection="row" gap={8}>
-      <Button variant="ghost">
-        <Text width="100%">Static</Text>
-      </Button>
-      <Button variant="ghost">
-        <Text width="100%">Steer</Text>
-      </Button>
-      <Button variant="ghost">
-        <Text width="100%">Direct</Text>
-      </Button>
     </Container>
   )
 }
@@ -56,7 +40,9 @@ export const GeometryMenu = () => {
 
   return (
     <SubMenu title="Geometry" cardPadding={12}>
-      <ControlMode />
+      <Button variant="ghost">
+        <Text width="100%">Enable Steering</Text>
+      </Button>
       <Separator />
       <InputSlider />
       <Separator />
