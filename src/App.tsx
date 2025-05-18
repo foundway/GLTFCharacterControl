@@ -80,7 +80,7 @@ const App = () => {
       <div style={{ width: '100vw', height: '100vh' }}>
         <Canvas
           shadows
-          camera={{ position: [0, 1, 0], fov: 50 }}
+          camera={{ position: [0, 1.6, 2], fov: 50 }}
         >
           <XR store={store}>
             <Scene />

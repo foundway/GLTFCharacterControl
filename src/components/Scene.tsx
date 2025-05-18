@@ -13,10 +13,8 @@ const Scene = () => {
     <>
       <color attach="background" args={['#333333']} />
       <Environment />
-      <group position={[0, 0, -1]}>
-        <Character />
-      </group>
-      {!session && <OrbitControls target={[0, 0.5, -1]} />}
+      <Character />
+      {!session && <OrbitControls target={[0, 0.5, 0]} />}
       {showGrid && (
         <group renderOrder={-1}>
           <Grid
