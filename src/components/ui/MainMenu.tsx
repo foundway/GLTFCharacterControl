@@ -15,8 +15,8 @@ export const MainMenu = () => {
   const { scene, camera } = useThree()
   const { session } = useXR()
   const groupRef = useRef<Group>(null)
-  const prevCameraForwardH = useRef(new Vector3())
-  const prevTargetPosition = useRef(new Vector3())
+  const prevCameraToMenu = useRef(new Vector3())
+  const prevTargetPos = useRef(new Vector3())
   const [isMenuVisible, setIsMenuVisible] = useState(false)
   const { setScale } = useModelStore()
   const ANGLE_THRESHOLD = 30
@@ -29,22 +29,20 @@ export const MainMenu = () => {
   })
 
   const updateMenuPosition = (delta: number) => {
-    if (!camera) return
-    if (!groupRef.current) return
+    if (!camera || !groupRef.current) return
 
-    const cameraForwardH = new Vector3()
-    camera.getWorldDirection(cameraForwardH)
-    cameraForwardH.y = Y_OFFSET;
+    const cameraWorldPos = camera.getWorldPosition(new Vector3())
+    const cameraToMenu = camera.getWorldDirection(new Vector3()).setY(Y_OFFSET).normalize()
     
-    if (cameraForwardH.angleTo(prevCameraForwardH.current) * (180/Math.PI) < ANGLE_THRESHOLD) {
-      cameraForwardH.copy(prevCameraForwardH.current)
+    if (cameraToMenu.angleTo(prevCameraToMenu.current) * (180/Math.PI) < ANGLE_THRESHOLD) {
+      cameraToMenu.copy(prevCameraToMenu.current)
     } else {
-      prevCameraForwardH.current.copy(cameraForwardH)
+      prevCameraToMenu.current.copy(cameraToMenu)
     }
-    const targetPosition = camera.position.clone().add(cameraForwardH.multiplyScalar(Z_OFFSET))
-    const smoothPosition = prevTargetPosition.current.lerp(targetPosition, 1 - Math.exp(-LERP_SPEED * delta))
-    groupRef.current.position.copy(smoothPosition)
-    groupRef.current.lookAt(camera.position)
+    const targetPos = camera.position.clone().add(cameraToMenu.multiplyScalar(Z_OFFSET))
+    const smoothPos = prevTargetPos.current.lerp(targetPos, 1 - Math.exp(-LERP_SPEED * delta))
+    groupRef.current.position.copy(smoothPos)
+    groupRef.current.lookAt(cameraWorldPos)
   }
 
   const handleXRClick = () => {

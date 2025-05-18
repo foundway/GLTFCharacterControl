@@ -1,5 +1,5 @@
 import { OrbitControls, Grid } from '@react-three/drei'
-import { useXR } from '@react-three/xr'
+import { useXR, XROrigin } from '@react-three/xr'
 import { Character } from './Character'
 import { MainMenu } from './ui/MainMenu'
 import { useSceneStore } from '../store/SceneStore'
@@ -32,7 +32,9 @@ const Scene = () => {
           />
         </group>
       )}
-      <MainMenu />
+      <XROrigin position={[0, 0, 2]} >
+        <MainMenu />
+      </XROrigin>
     </>
   )
 }
