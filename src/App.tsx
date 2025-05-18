@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
+import XRController from './components/XRController'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -68,11 +69,12 @@ const UploadButton = () => {
   )
 }
 
-const App = () => {
-  const store = createXRStore({
-    bounded: false
-  })
+const store = createXRStore({
+  controller: {rayPointer: {minDistance: 0.01}, grabPointer: false, teleportPointer: false},
+  bounded: false
+})
 
+const App = () => {
   return (
     <AppContextProvider>
       <div style={{ width: '100vw', height: '100vh' }}>
