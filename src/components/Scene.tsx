@@ -25,19 +25,18 @@ const Scene = () => {
       <Character />
       {!session && <OrbitControls target={[0, orbitCenter, 0]} />}
       {showGrid && (
-        <group renderOrder={-1}>
-          <Grid
-            position={[0, 0, 0]}
-            args={[20, 20]}
-            cellSize={0.5}
-            cellThickness={1}
-            cellColor="#eee"
-            sectionSize={100}
-            sectionThickness={1}
-            sectionColor="#944"
-            fadeDistance={3}
-          />
-        </group>
+        <Grid
+          position={[0, 0, 0]}
+          args={[20, 20]}
+          cellSize={0.5}
+          cellThickness={1}
+          cellColor="#eee"
+          sectionSize={100}
+          sectionThickness={1}
+          sectionColor="#944"
+          fadeDistance={3}
+          renderOrder={-1}
+        />
       )}
       <XROrigin position={[0, 0, 2]} >
         <MainMenu />
