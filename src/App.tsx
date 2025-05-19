@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
 import XRController from './components/XRController'
@@ -15,8 +15,11 @@ import {
 
 import Scene from './components/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
+import { useModelStore } from './store/ModelStore'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
+
+
 
 const ModelSelect = () => {
   return (
@@ -42,6 +45,7 @@ const ModelSelect = () => {
 const UploadButton = () => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { addModel } = useModels()
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {

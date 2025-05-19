@@ -1,20 +1,29 @@
 import { OrbitControls, Grid } from '@react-three/drei'
 import { useXR, XROrigin } from '@react-three/xr'
+import { useThree } from '@react-three/fiber'
+import { useEffect } from 'react'
 import { Character } from './Character'
 import { MainMenu } from './ui/MainMenu'
 import { useSceneStore } from '../store/SceneStore'
 import { Environment } from './Environment'
 
 const Scene = () => {
-  const { showGrid } = useSceneStore()
+  const { showGrid, orbitCenter, stageRadius } = useSceneStore()
+  const { camera } = useThree()
   const { session } = useXR()
+
+  useEffect(() => {
+    camera.position.z = stageRadius
+    camera.position.y = orbitCenter * 1.333
+    camera.updateProjectionMatrix()
+  }, [stageRadius, camera])
 
   return (
     <>
       <color attach="background" args={['#333333']} />
       <Environment />
       <Character />
-      {!session && <OrbitControls target={[0, 0.5, 0]} />}
+      {!session && <OrbitControls target={[0, orbitCenter, 0]} />}
       {showGrid && (
         <group renderOrder={-1}>
           <Grid

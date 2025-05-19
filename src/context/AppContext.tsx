@@ -12,7 +12,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [models, setModels] = useState<string[]>([])
+  const [models, setModels] = useState<string[]>(["Duck.glb"])
   const addModel = (modelUrl: string) => {
     setModels(prev => [...prev, modelUrl])
   }
@@ -22,6 +22,7 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
     </AppContext.Provider>
   )
 }
+
 export const useModels = () => { 
   const context = useContext(AppContext)
   if (!context) throw new Error('useModels must be used within an AppProvider')
