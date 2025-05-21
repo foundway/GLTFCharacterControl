@@ -17,9 +17,29 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   const modelUrl = models[models.length - 1]
   const { scene, animations } = useGLTF(modelUrl)
   const group = React.useRef<THREE.Group>(null)
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
   const { actions } = useAnimations(animations, group)
   const { camera } = useThree()
+
+  const physicalMaterial = React.useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      transmission: 0.9,
+      roughness: 0.1,
+      thickness: 3,
+      ior: 1.5,
+      color: new THREE.Color('#c9ffa1'),
+      side: THREE.DoubleSide
+    })
+  }, [])
+
+  const clone = React.useMemo(() => {
+    const cloned = SkeletonUtils.clone(scene)
+    cloned.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.name === 'cube1') {
+        child.material = physicalMaterial
+      }
+    })
+    return cloned
+  }, [scene, physicalMaterial])
 
   useEffect(() => { 
     if (!scene) return

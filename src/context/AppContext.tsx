@@ -12,7 +12,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [models, setModels] = useState<string[]>(["Duck.glb"])
+  const [models, setModels] = useState<string[]>(["gelatinous_cube-transformed.glb"])
   const addModel = (modelUrl: string) => {
     setModels(prev => [...prev, modelUrl])
   }
