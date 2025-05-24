@@ -1,25 +1,20 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
-import XRController from './components/XRController'
 import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 
 import Scene from './components/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
-import { useModelStore } from './store/ModelStore'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
-
-
 
 const ModelSelect = () => {
   return (
@@ -74,7 +69,7 @@ const UploadButton = () => {
 }
 
 const store = createXRStore({
-  controller: {rayPointer: {minDistance: 0.01}, grabPointer: false, teleportPointer: false},
+  controller: {rayPointer: {minDistance: 0.01}, grabPointer: false, teleportPointer: false}, // TODO: use custom XRController with tooltips
   bounded: false
 })
 

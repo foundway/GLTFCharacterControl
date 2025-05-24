@@ -19,27 +19,25 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   const group = React.useRef<THREE.Group>(null)
   const { actions } = useAnimations(animations, group)
   const { camera } = useThree()
-
-  const physicalMaterial = React.useMemo(() => {
-    return new THREE.MeshPhysicalMaterial({
-      transmission: 0.9,
-      roughness: 0.1,
-      thickness: 3,
-      ior: 1.5,
-      color: new THREE.Color('#c9ffa1'),
-      side: THREE.DoubleSide
-    })
-  }, [])
+  const UNSET_ROUGHNESS = 1
+  const UNSET_THICKNESS = 0
 
   const clone = React.useMemo(() => {
     const cloned = SkeletonUtils.clone(scene)
     cloned.traverse((child) => {
-      if (child instanceof THREE.Mesh && child.name === 'cube1') {
-        child.material = physicalMaterial
-      }
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshPhysicalMaterial && child.material.transmission > 0) {
+        child.material.transparent = false
+        if (child.material.roughness == UNSET_ROUGHNESS) { // roughness need to be lower than 1
+          child.material.roughness = 0.1
+        }
+        if (child.material.thickness == UNSET_THICKNESS) { // roughness need to be higher than 0
+          child.material.thickness = 1
+        }
+        child.material.side = THREE.FrontSide
+      } 
     })
     return cloned
-  }, [scene, physicalMaterial])
+  }, [scene])
 
   useEffect(() => { 
     if (!scene) return
@@ -67,9 +65,9 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   return (
     <HandleTarget>
-      <group ref={group} {...props} dispose={null} renderOrder={-100} >
+      <group ref={group} scale={scale} {...props} dispose={null} >
         <Handle translate={{ x: true, y: true, z: true }} scale={false} >
-          <primitive object={clone} scale={scale} userData={{ isCharacter: true }}/>
+          <primitive object={clone} userData={{ isCharacter: true }}/>
         </Handle>
       </group>
     </HandleTarget>
