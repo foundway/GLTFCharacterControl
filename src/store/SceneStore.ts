@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import * as THREE from 'three'
 
 const Environments = {
   "Hall": 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/2k/dancing_hall_2k.hdr',
@@ -13,6 +14,8 @@ interface SceneState {
   currentEnvironment: string
   orbitCenter: number
   stageRadius: number
+  centeringOffset: THREE.Vector3
+  setCenteringOffset: (offset: THREE.Vector3) => void
   toggleBackground: () => void
   toggleGrid: () => void
   setEnvironment: (environment: string) => void
@@ -26,6 +29,8 @@ export const useSceneStore = create<SceneState>((set) => ({
   currentEnvironment: Environments["Hall"],
   orbitCenter: 0.5,
   stageRadius: 1,
+  centeringOffset: new THREE.Vector3(0, 0, 0),
+  setCenteringOffset: (offset) => set({ centeringOffset: offset }),
   toggleBackground: () => set((state) => ({ showBackground: !state.showBackground })),
   toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
   setEnvironment: (environment: string) => set({ currentEnvironment: environment }),

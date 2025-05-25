@@ -4,20 +4,36 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react'
 
+
+interface ModelItem {
+  name: string
+  url: string
+}
+
+const Models: ModelItem[] = [
+  { name: "Ship in a bottle", url: 'ship-in-a-bottle-optimized.glb' },
+  { name: "Gelatinous Cube", url: 'gelatinous-cube-optimized.glb' },
+  { name: "Walking Woman", url: 'woman-walking-optimized.glb' },
+]
+
 interface AppContextType {
-  models: string[]
-  addModel: (modelUrl: string) => void
+  models: ModelItem[]
+  currentModel: ModelItem
+  setCurrentModel: (model: ModelItem) => void
+  addModel: (model: ModelItem) => void
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined)
 
 export const AppContextProvider = ({ children }: { children: ReactNode }) => {
-  const [models, setModels] = useState<string[]>(["ship-in-a-bottle_mod.glb"])
-  const addModel = (modelUrl: string) => {
-    setModels(prev => [...prev, modelUrl])
+  const [models, setModels] = useState<ModelItem[]>(Models)
+  const [currentModel, setCurrentModel] = useState<ModelItem>(Models[0])
+  const addModel = (model: ModelItem) => {
+    setModels(prev => [...prev, model])
+    setCurrentModel(model)
   }
   return (
-    <AppContext.Provider value={{ models, addModel }}>
+    <AppContext.Provider value={{ models, currentModel, setCurrentModel, addModel }}>
       {children}
     </AppContext.Provider>
   )
@@ -26,5 +42,5 @@ export const AppContextProvider = ({ children }: { children: ReactNode }) => {
 export const useModels = () => { 
   const context = useContext(AppContext)
   if (!context) throw new Error('useModels must be used within an AppProvider')
-  return { models: context.models, addModel: context.addModel }
+  return context
 } 

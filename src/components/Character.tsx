@@ -6,21 +6,22 @@ import { useAnimationStore } from '../store/AnimationStore'
 import { Handle, HandleTarget } from '@react-three/handle'
 import { useModels } from '../context/AppContext'
 import { useModelStore } from '../store/ModelStore'
-import { useThree } from '@react-three/fiber'
 import { useSceneStore } from '@/store/SceneStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { models } = useModels()
   const { scale } = useModelStore()
-  const { setOrbitCenter, setStageRadius } = useSceneStore()
-  const modelUrl = models[models.length - 1]
+  const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset } = useSceneStore()
+  const { currentModel } = useModels()
+  const modelUrl = currentModel.url
   const { scene, animations } = useGLTF(modelUrl)
   const group = React.useRef<THREE.Group>(null)
   const { actions } = useAnimations(animations, group)
-  const { camera } = useThree()
   const UNSET_ROUGHNESS = 1
   const UNSET_THICKNESS = 0
+  const FALLBACK_ROUGHNESS = 0.1 
+  const FALLBACK_THICKNESS = 1
 
   const clone = React.useMemo(() => {
     const cloned = SkeletonUtils.clone(scene)
@@ -28,12 +29,13 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
       if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshPhysicalMaterial && child.material.transmission > 0) {
         child.material.transparent = false
         if (child.material.roughness == UNSET_ROUGHNESS) { // roughness need to be lower than 1
-          child.material.roughness = 0.1
+          child.material.roughness = FALLBACK_ROUGHNESS
         }
         if (child.material.thickness == UNSET_THICKNESS) { // roughness need to be higher than 0
-          child.material.thickness = 1
+          child.material.thickness = FALLBACK_THICKNESS
         }
         child.material.side = THREE.FrontSide
+        console.log("GLTF Material: ", child.material)
       } 
     })
     return cloned
@@ -43,11 +45,13 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
     if (!scene) return
     const box = new THREE.Box3().setFromObject(scene)
     const size = box.getSize(new THREE.Vector3())
-    const radius = Math.max(size.x, size.z)
+    const radius = Math.max(Math.max(size.x, size.y), size.z)
     const center = box.getCenter(new THREE.Vector3())
-    setOrbitCenter(center.y)
-    setStageRadius(radius * 2)
-  }, [scene, camera])
+    const min = box.min
+    setCenteringOffset(new THREE.Vector3(-center.x, -min.y, -center.z))
+    setOrbitCenter(size.y/2)
+    setStageRadius(radius)
+  }, [scene])
 
   useEffect(() => { // Set animation list and play first animation on load
     setAnimations(animations)
@@ -67,7 +71,7 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
     <HandleTarget>
       <group ref={group} scale={scale} {...props} dispose={null} >
         <Handle translate={{ x: true, y: true, z: true }} scale={false} >
-          <primitive object={clone} userData={{ isCharacter: true }}/>
+          <primitive object={clone} position={centeringOffset} userData={{ isCharacter: true }} />
         </Handle>
       </group>
     </HandleTarget>

@@ -13,7 +13,7 @@ const Scene = () => {
   const { session } = useXR()
 
   useEffect(() => {
-    camera.position.z = stageRadius
+    camera.position.z = stageRadius * 1.5
     camera.position.y = orbitCenter * 1.333
     camera.updateProjectionMatrix()
   }, [stageRadius, camera])
@@ -38,7 +38,7 @@ const Scene = () => {
           renderOrder={-1}
         />
       )}
-      <XROrigin position={[0, 0, 2]} >
+      <XROrigin position={[0, 0, stageRadius]} >
         <MainMenu />
       </XROrigin>
     </>
