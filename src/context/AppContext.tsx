@@ -11,7 +11,10 @@ interface ModelItem {
 
 const Models: ModelItem[] = [
   { name: "Ship In A Bottle", url: 'ship-in-a-bottle-optimized.glb' },
+  { name: "Mosquito In Amber", url: 'mosquito-in-amber-optimized.glb' },
   { name: "Gelatinous Cube", url: 'gelatinous-cube-optimized.glb' },
+  { name: "Terrarium Bot A", url: 'terrarium-bot-a-optimized.glb' },
+  { name: "Terrarium Bot B", url: 'terrarium-bot-b-optimized.glb' },
   { name: "Walking Woman", url: 'woman-walking-optimized.glb' },
 ]
 

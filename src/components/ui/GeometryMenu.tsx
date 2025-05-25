@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { Container, Text, } from '@react-three/uikit'
-import { Button, Slider, Checkbox, Label } from '@react-three/uikit-default'
+import { Button, Slider } from '@react-three/uikit-default'
 import { useModelStore } from "../../store/ModelStore"
 import { useThree } from '@react-three/fiber'
 import { SubMenu } from './SubMenu'

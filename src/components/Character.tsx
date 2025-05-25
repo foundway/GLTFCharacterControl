@@ -68,8 +68,8 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
 
   return (
     <HandleTarget>
-      <group ref={group} scale={scale} {...props} dispose={null} >
-        <Handle translate={{ x: true, y: true, z: true }} scale={false} >
+      <group ref={group} scale={scale} rotation-y={0.6} {...props} dispose={null}>
+        <Handle translate={{ x: true, y: true, z: true }} scale={false}>
           <primitive object={clone} position={centeringOffset} userData={{ isCharacter: true }} />
         </Handle>
       </group>
