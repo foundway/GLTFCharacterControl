@@ -1,8 +1,8 @@
 import { Container, Text } from '@react-three/uikit'
 import { Button } from '@react-three/uikit-default'
 import { Check } from '@react-three/uikit-lucide'
-import { useAnimationStore } from '../../store/AnimationStore'
-import { SubMenu } from './SubMenu'
+import { useAnimationStore } from '@/store/AnimationStore'
+import { SubMenu } from '@/components/ui/SubMenu'
 
 export const AnimationMenu = () => {
   const { animations, setCurrentAnimation, currentAnimation } = useAnimationStore()

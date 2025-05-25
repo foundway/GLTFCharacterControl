@@ -2,10 +2,10 @@ import React from 'react'
 import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
+import { Button } from '@/components/ui/lib/button'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/lib/select"
 
-import Scene from './components/Scene'
+import Scene from '@/components/xr/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";

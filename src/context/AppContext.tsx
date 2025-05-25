@@ -16,6 +16,8 @@ const Models: ModelItem[] = [
   { name: "Terrarium Bot A", url: 'terrarium-bot-a-optimized.glb' },
   { name: "Terrarium Bot B", url: 'terrarium-bot-b-optimized.glb' },
   { name: "Walking Woman", url: 'woman-walking-optimized.glb' },
+  { name: "Cesium Man", url: 'cesium-man.glb' },
+  { name: "Duck", url: 'duck.glb' },
 ]
 
 interface AppContextType {

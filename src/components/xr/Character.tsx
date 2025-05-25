@@ -1,12 +1,12 @@
 import * as THREE from 'three'
-import React, { JSX, useEffect } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
-import { useAnimationStore } from '../store/AnimationStore'
+import React, { JSX, useEffect } from 'react'
 import { Handle, HandleTarget } from '@react-three/handle'
-import { useModels } from '../context/AppContext'
-import { useModelStore } from '../store/ModelStore'
+import { useGLTF, useAnimations } from '@react-three/drei'
+import { useModels } from '@/context/AppContext'
+import { useModelStore } from '@/store/ModelStore'
 import { useSceneStore } from '@/store/SceneStore'
+import { useAnimationStore } from '@/store/AnimationStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
@@ -34,7 +34,6 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
           child.material.thickness = FALLBACK_THICKNESS
         }
         child.material.side = THREE.FrontSide
-        console.log("GLTF Material: ", child.material)
       } 
     })
     return cloned

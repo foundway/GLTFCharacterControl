@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Object3D, Vector3, Group } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useXR } from '@react-three/xr'

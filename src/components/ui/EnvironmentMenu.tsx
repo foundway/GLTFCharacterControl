@@ -1,9 +1,9 @@
 import { Container, Text } from '@react-three/uikit'
 import { Button } from '@react-three/uikit-default'
 import { Check } from '@react-three/uikit-lucide'
-import { useSceneStore, Environments } from '../../store/SceneStore'
-import { Separator } from './Separator'
-import { SubMenu } from './SubMenu'
+import { useSceneStore, Environments } from '@/store/SceneStore'
+import { Separator } from '@/components/ui/Separator'
+import { SubMenu } from '@/components/ui/SubMenu'
 
 export const EnvironmentMenu = () => {
   const { setEnvironment, currentEnvironment, showBackground, toggleBackground, showGrid, toggleGrid } = useSceneStore()

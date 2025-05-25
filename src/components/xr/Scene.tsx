@@ -1,11 +1,11 @@
+import { useEffect } from 'react'
+import { useThree } from '@react-three/fiber'
 import { OrbitControls, Grid } from '@react-three/drei'
 import { useXR, XROrigin } from '@react-three/xr'
-import { useThree } from '@react-three/fiber'
-import { useEffect } from 'react'
-import { Character } from './Character'
-import { MainMenu } from './ui/MainMenu'
-import { useSceneStore } from '../store/SceneStore'
-import { Environment } from './Environment'
+import { Character } from '@/components/xr/Character'
+import { Environment } from '@/components/xr/Environment'
+import { MainMenu } from '@/components/ui/MainMenu'
+import { useSceneStore } from '@/store/SceneStore'
 
 const Scene = () => {
   const { showGrid, orbitCenter, stageRadius } = useSceneStore()
