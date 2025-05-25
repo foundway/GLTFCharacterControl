@@ -3,14 +3,7 @@ import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 
 import Scene from './components/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
@@ -28,13 +21,19 @@ const ModelSelect = () => {
   return (
     <div className="absolute top-8 left-8">
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="w-48 bg-black text-white rounded-full border-none p-6">
+        <SelectTrigger className="w-48 bg-black text-white rounded-full border-none p-6 hover:bg-gray-700 transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
         <SelectContent className="bg-black text-white border-none p-1">
           <SelectGroup>
             {models.map((model) => (
-              <SelectItem key={model.url} value={model.url}>{model.name}</SelectItem>
+              <SelectItem 
+                key={model.url} 
+                value={model.url}
+                className="hover:bg-gray-800 cursor-pointer transition-colors"
+              >
+                {model.name}
+              </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
@@ -64,8 +63,8 @@ const UploadButton = () => {
         onChange={handleFileUpload}
         className="hidden"
       />
-      <Button 
-        className="absolute top-8 left-58 rounded-full gap-1 h-12"
+      <Button
+        className="absolute top-8 left-58 rounded-full gap-1 h-12 hover:bg-gray-700 cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <MdOutlineFileUpload size={20} />
@@ -76,30 +75,33 @@ const UploadButton = () => {
 }
 
 const store = createXRStore({
-  controller: {rayPointer: {minDistance: 0.01}, grabPointer: false, teleportPointer: false}, // TODO: use custom XRController with tooltips
+  controller: { rayPointer: { minDistance: 0.01 }, grabPointer: false, teleportPointer: false }, // TODO: use custom XRController with tooltips
   bounded: false
 })
 
 const App = () => {
   return (
     <AppContextProvider>
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '100vw', height: '100vh', backgroundColor: 'black' }}>
         <Canvas
+          className="pointer-events-none" // block inputs while using UIs
+          camera={{ fov: 50 }}
           shadows
-          camera={{ position: [0, 1.6, 2], fov: 50 }}
         >
           <XR store={store}>
             <Scene />
           </XR>
         </Canvas>
-        <ModelSelect />
-        <UploadButton />
-        <Button 
-          className="absolute top-8 right-8 rounded-full gap-3 p-6" 
-          onClick={() => store.enterAR()}>
-          <BsHeadsetVr size={20} />
-          Enter XR
-        </Button>
+        <div className="pointer-events-auto">
+          <ModelSelect />
+          <UploadButton />
+          <Button
+            className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-700 cursor-pointer"
+            onClick={() => store.enterAR()}>
+            <BsHeadsetVr size={20} />
+            Enter XR
+          </Button>
+        </div>
       </div>
     </AppContextProvider>
   )

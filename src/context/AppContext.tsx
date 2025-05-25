@@ -4,14 +4,13 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react'
 
-
 interface ModelItem {
   name: string
   url: string
 }
 
 const Models: ModelItem[] = [
-  { name: "Ship in a bottle", url: 'ship-in-a-bottle-optimized.glb' },
+  { name: "Ship In A Bottle", url: 'ship-in-a-bottle-optimized.glb' },
   { name: "Gelatinous Cube", url: 'gelatinous-cube-optimized.glb' },
   { name: "Walking Woman", url: 'woman-walking-optimized.glb' },
 ]

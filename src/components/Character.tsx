@@ -10,7 +10,6 @@ import { useSceneStore } from '@/store/SceneStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
-  const { models } = useModels()
   const { scale } = useModelStore()
   const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset } = useSceneStore()
   const { currentModel } = useModels()
