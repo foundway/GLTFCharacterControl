@@ -42,10 +42,9 @@ export const SubMenu = ({ title, children, cardWidth = 200, cardPadding = 4 }: S
         {showMenu && (
           <Card 
             positionType="absolute"
-            positionLeft={-12} 
+            positionLeft={-8} 
             positionBottom={-8} 
             padding={cardPadding}
-            margin={8}
             width={cardWidth}
           >
             {children}

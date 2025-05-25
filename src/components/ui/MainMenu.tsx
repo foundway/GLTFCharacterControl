@@ -17,8 +17,8 @@ export const MainMenu = () => {
   const groupRef = useRef<Group>(null)
   const prevCameraToMenu = useRef(new Vector3())
   const prevTargetPos = useRef(new Vector3())
-  const [isMenuVisible, setIsMenuVisible] = useState(false)
   const { setScale } = useModelStore()
+  const { isMenuVisible, setMenuVisible } = useModelStore()
   const ANGLE_THRESHOLD = 30
   const LERP_SPEED = 4 
   const Y_OFFSET = -0.7
@@ -51,7 +51,7 @@ export const MainMenu = () => {
   }
 
   const toggleMenu = () => {
-    setIsMenuVisible(!isMenuVisible)
+    setMenuVisible(!isMenuVisible)
   }
 
   const resetTransformation = () => {

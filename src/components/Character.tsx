@@ -10,7 +10,7 @@ import { useSceneStore } from '@/store/SceneStore'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
-  const { scale } = useModelStore()
+  const { scale, isMenuVisible } = useModelStore()
   const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset } = useSceneStore()
   const { currentModel } = useModels()
   const modelUrl = currentModel.url
@@ -69,7 +69,7 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
   return (
     <HandleTarget>
       <group ref={group} scale={scale} rotation-y={0.6} {...props} dispose={null}>
-        <Handle translate={{ x: true, y: true, z: true }} scale={false}>
+        <Handle translate={{ x: true, y: true, z: true }} scale={false} bind={!isMenuVisible}>
           <primitive object={clone} position={centeringOffset} userData={{ isCharacter: true }} />
         </Handle>
       </group>

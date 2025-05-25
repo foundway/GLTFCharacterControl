@@ -21,7 +21,7 @@ const ModelSelect = () => {
   return (
     <div className="absolute top-8 left-8">
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="w-48 bg-black text-white rounded-full border-none p-6 hover:bg-gray-700 transition-colors cursor-pointer">
+        <SelectTrigger className="w-48 bg-black text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
         <SelectContent className="bg-black text-white border-none p-1">
@@ -64,7 +64,7 @@ const UploadButton = () => {
         className="hidden"
       />
       <Button
-        className="absolute top-8 left-58 rounded-full gap-1 h-12 hover:bg-gray-700 cursor-pointer"
+        className="absolute top-8 left-58 rounded-full gap-1 h-12 hover:bg-gray-800 cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <MdOutlineFileUpload size={20} />
@@ -96,7 +96,7 @@ const App = () => {
           <ModelSelect />
           <UploadButton />
           <Button
-            className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-700 cursor-pointer"
+            className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-800 cursor-pointer"
             onClick={() => store.enterAR()}>
             <BsHeadsetVr size={20} />
             Enter XR
