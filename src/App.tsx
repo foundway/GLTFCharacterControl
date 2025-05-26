@@ -2,13 +2,41 @@ import React from 'react'
 import { useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
-import { Button } from '@/components/ui/lib/button'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/lib/select"
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 
-import Scene from '@/components/xr/Scene'
+import Scene from '@/components/three/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
+
+const ModelInfoCard = () => {
+  const { currentModel } = useModels();
+  
+  return (
+    <div className="absolute bottom-8 left-8 bg-black/40 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/10">
+      <h3 className="text-small font-semibold mb-2">{currentModel.name}</h3>
+      <div className="space-y-1 text-sm text-gray-300">
+        <p>
+          <span className="font-small">Author: </span>
+          {currentModel.authorURL ? (
+            <a href={currentModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline" >
+              {currentModel.author}
+            </a>
+          ) : ('Unknown')}
+        </p>
+        <p><span className="font-small">License: </span>
+          {currentModel.licenseURL ? (
+          <a href={currentModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline" >
+              {currentModel.license}
+            </a>
+          ) : ('Unknown')}
+        </p>
+        <p>Modified and optimized for XR</p>
+      </div>
+    </div>
+  )
+}
 
 const ModelSelect = () => {
   const { models, currentModel, setCurrentModel } = useModels();
@@ -51,7 +79,7 @@ const UploadButton = () => {
     if (file) {
       const url = URL.createObjectURL(file)
       const name = file.name.replace(/\.[^/.]+$/, "") // Remove extension for display
-      addModel({ name, url })
+      addModel({ name, url, author: 'User Upload', license: 'User Upload' })
     }
   }
   return (
@@ -95,6 +123,7 @@ const App = () => {
         <div className="pointer-events-auto">
           <ModelSelect />
           <UploadButton />
+          <ModelInfoCard />
           <Button
             className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-800 cursor-pointer"
             onClick={() => store.enterAR()}>

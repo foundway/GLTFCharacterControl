@@ -7,17 +7,21 @@ import { createContext, useContext, useState, ReactNode } from 'react'
 interface ModelItem {
   name: string
   url: string
+  author: string
+  authorURL: string
+  license: string
+  licenseURL: string
 }
 
 const Models: ModelItem[] = [
-  { name: "Ship In A Bottle", url: 'ship-in-a-bottle-optimized.glb' },
-  { name: "Mosquito In Amber", url: 'mosquito-in-amber-optimized.glb' },
-  { name: "Gelatinous Cube", url: 'gelatinous-cube-optimized.glb' },
-  { name: "Terrarium Bot A", url: 'terrarium-bot-a-optimized.glb' },
-  { name: "Terrarium Bot B", url: 'terrarium-bot-b-optimized.glb' },
-  { name: "Walking Woman", url: 'woman-walking-optimized.glb' },
-  { name: "Cesium Man", url: 'cesium-man.glb' },
-  { name: "Duck", url: 'duck.glb' },
+  { name: "Ship In A Bottle", url: 'ship-in-a-bottle-optimized.glb', author: 'Loïc Norgeot', authorURL: 'https://sketchfab.com/norgeotloic', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/' },
+  { name: "Mosquito In Amber", url: 'mosquito-in-amber-optimized.glb', author: 'Loïc Norgeot', authorURL: 'https://sketchfab.com/norgeotloic', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/'  },
+  { name: "Mercedes Benz 300SL Gullwing", url: 'mercedes-benz-300sl-gullwing-optimized.glb', author: 'vecarz.com', authorURL: 'https://sketchfab.com/heynic', license: 'CC BY 4.0', licenseURL: 'https://creativecommons.org/licenses/by/4.0/'  },
+  { name: "Gelatinous Cube", url: 'gelatinous-cube-optimized.glb', author: 'glenatron', authorURL: 'https://sketchfab.com/glenatron', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/' },
+  { name: "Terrarium Bot A", url: 'terrarium-bot-a-optimized.glb', author: 'N01516', authorURL: 'https://sketchfab.com/N01506', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/'},
+  { name: "Terrarium Bot B", url: 'terrarium-bot-b-optimized.glb', author: 'N01516', authorURL: 'https://sketchfab.com/N01506', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/' },
+  { name: "Cesium Man", url: 'cesium-man.glb', author: 'Cesium', authorURL: 'https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/CesiumMan/README.md', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/'},
+  { name: "Duck", url: 'duck.glb', author: 'Sony', authorURL: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Duck', license: 'SCEA Shared Source License, Version 1.0', licenseURL: 'https://spdx.org/licenses/SCEA.html' },
 ]
 
 interface AppContextType {
