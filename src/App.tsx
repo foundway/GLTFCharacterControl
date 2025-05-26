@@ -32,7 +32,6 @@ const ModelInfoCard = () => {
             </a>
           ) : ('Unknown')}
         </p>
-        <p>Modified and optimized for XR</p>
       </div>
     </div>
   )
@@ -47,9 +46,10 @@ const ModelSelect = () => {
   };
 
   return (
-    <div className="absolute top-8 left-8">
+    // <div className="absolute top-8 left-8">
+    <div>
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="w-48 bg-black text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
+        <SelectTrigger className="bg-black text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
         <SelectContent className="bg-black text-white border-none p-1">
@@ -79,7 +79,7 @@ const UploadButton = () => {
     if (file) {
       const url = URL.createObjectURL(file)
       const name = file.name.replace(/\.[^/.]+$/, "") // Remove extension for display
-      addModel({ name, url, author: 'User Upload', license: 'User Upload' })
+      addModel({ name, url, author: 'User Upload', authorURL: 'n/a', license: 'User Upload', licenseURL: 'n/a' })
     }
   }
   return (
@@ -92,7 +92,7 @@ const UploadButton = () => {
         className="hidden"
       />
       <Button
-        className="absolute top-8 left-58 rounded-full gap-1 h-12 hover:bg-gray-800 cursor-pointer"
+        className="rounded-full gap-1 h-12 hover:bg-gray-800 cursor-pointer"
         onClick={() => fileInputRef.current?.click()}
       >
         <MdOutlineFileUpload size={20} />
@@ -121,8 +121,10 @@ const App = () => {
           </XR>
         </Canvas>
         <div className="pointer-events-auto">
-          <ModelSelect />
-          <UploadButton />
+          <span className='absolute left-8 top-8 gap-4 flex flex-row '>
+            <ModelSelect />
+            <UploadButton />
+          </span>
           <ModelInfoCard />
           <Button
             className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-800 cursor-pointer"

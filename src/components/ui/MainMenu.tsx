@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Object3D, Vector3, Group } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useXR } from '@react-three/xr'
@@ -27,6 +27,12 @@ export const MainMenu = () => {
   useFrame((_, delta) => {
     updateMenuPosition(delta)
   })
+
+  useEffect(() => {
+    if (session) {
+      setMenuVisible(false)
+    }
+  }, [session, setMenuVisible])
 
   const updateMenuPosition = (delta: number) => {
     if (!camera || !groupRef.current) return
