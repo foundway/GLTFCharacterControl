@@ -9,6 +9,7 @@ import Scene from '@/components/three/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
+import XRController from './components/three/XRController'
 
 const ModelInfoCard = () => {
   const { currentModel } = useModels();
@@ -103,7 +104,8 @@ const UploadButton = () => {
 }
 
 const store = createXRStore({
-  controller: { rayPointer: { minDistance: 0.01 }, grabPointer: false, teleportPointer: false }, // TODO: use custom XRController with tooltips
+  // controller: { rayPointer: { minDistance: 0.01 }, grabPointer: false, teleportPointer: false }, // TODO: use custom XRController with tooltips
+  controller: XRController,
   bounded: false
 })
 
