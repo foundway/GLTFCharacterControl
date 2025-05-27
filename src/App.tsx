@@ -47,13 +47,12 @@ const ModelSelect = () => {
   };
 
   return (
-    // <div className="absolute top-8 left-8">
     <div>
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="bg-black text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
+        <SelectTrigger className="bg-neutral-900 text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
-        <SelectContent className="bg-black text-white border-none p-1">
+        <SelectContent className="bg-neutral-900 text-white border-none p-1">
           <SelectGroup>
             {models.map((model) => (
               <SelectItem 
@@ -104,7 +103,6 @@ const UploadButton = () => {
 }
 
 const store = createXRStore({
-  // controller: { rayPointer: { minDistance: 0.01 }, grabPointer: false, teleportPointer: false }, // TODO: use custom XRController with tooltips
   controller: XRController,
   bounded: false
 })
