@@ -26,7 +26,7 @@ interface SceneState {
 export const useSceneStore = create<SceneState>((set) => ({
   showBackground: true,
   showGrid: false,
-  currentEnvironment: Environments["Hall"],
+  currentEnvironment: Environments["Hanger"],
   orbitCenter: 0.5,
   stageRadius: 1,
   centeringOffset: new THREE.Vector3(0, 0, 0),
