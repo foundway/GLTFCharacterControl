@@ -15,20 +15,20 @@ const ModelInfoCard = () => {
   const { currentModel } = useModels();
   
   return (
-    <div className="absolute bottom-8 left-8 bg-black/40 backdrop-blur-md rounded-xl px-4 py-3 text-white border border-white/10">
-      <h3 className="text-small font-semibold mb-2">{currentModel.name}</h3>
-      <div className="space-y-1 text-sm text-gray-300">
-        <p>
-          <span className="font-small">Author: </span>
+    <div className="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md rounded-[2px] px-4 py-3 text-white border border-white/10 flex flex-col gap-0">
+      <h3 className="text-xs font-semibold mb-1">{currentModel.name}</h3>
+      <div className="space-y-0.5 text-xs text-gray-300">
+        <p className="mb-0.5">
+          <span className="text-xs">Author: </span>
           {currentModel.authorURL ? (
-            <a href={currentModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline" >
+            <a href={currentModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
               {currentModel.author}
             </a>
           ) : ('Unknown')}
         </p>
-        <p><span className="font-small">License: </span>
+        <p className="mb-0.5"><span className="text-xs">License: </span>
           {currentModel.licenseURL ? (
-          <a href={currentModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline" >
+          <a href={currentModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
               {currentModel.license}
             </a>
           ) : ('Unknown')}
@@ -49,16 +49,16 @@ const ModelSelect = () => {
   return (
     <div>
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="bg-neutral-900 text-white rounded-full border-none p-6 hover:bg-gray-800 transition-colors cursor-pointer">
+        <SelectTrigger className="model-select-trigger bg-control text-white rounded-[2px] border-none p-3 h-[40px] hover:bg-control/90 transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
-        <SelectContent className="bg-neutral-900 text-white border-none p-1">
+        <SelectContent className="bg-control text-white border-none p-1">
           <SelectGroup>
             {models.map((model) => (
               <SelectItem 
                 key={model.url} 
                 value={model.url}
-                className="hover:bg-gray-800 cursor-pointer transition-colors"
+                className="hover:bg-control/90 cursor-pointer transition-colors"
               >
                 {model.name}
               </SelectItem>
@@ -92,11 +92,11 @@ const UploadButton = () => {
         className="hidden"
       />
       <Button
-        className="rounded-full gap-1 h-12 hover:bg-gray-800 cursor-pointer"
+        className="bg-control rounded-[2px] gap-1 h-10 w-10 hover:bg-control/90 cursor-pointer px-2"
         onClick={() => fileInputRef.current?.click()}
       >
         <MdOutlineFileUpload size={20} />
-        <p className="text-white text-xs">(.glb)</p>
+        {/* <p className="text-white text-xs"></p> */}
       </Button>
     </>
   )
@@ -121,16 +121,15 @@ const App = () => {
           </XR>
         </Canvas>
         <div className="pointer-events-auto">
-          <span className='absolute left-8 top-8 gap-4 flex flex-row '>
-            <ModelSelect />
+          <span className='absolute left-2 top-2 gap-2 flex flex-row' style={{ gap: '8px' }}>
             <UploadButton />
+            <ModelSelect />
           </span>
           <ModelInfoCard />
           <Button
-            className="absolute top-8 right-8 rounded-full gap-3 p-6 hover:bg-gray-800 cursor-pointer"
+            className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-control/90 cursor-pointer"
             onClick={() => store.enterAR()}>
             <BsHeadsetVr size={20} />
-            Enter XR
           </Button>
         </div>
       </div>
