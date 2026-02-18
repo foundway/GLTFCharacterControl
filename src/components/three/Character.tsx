@@ -7,14 +7,16 @@ import { useModels } from '@/context/AppContext'
 import { useModelStore } from '@/store/ModelStore'
 import { useSceneStore } from '@/store/SceneStore'
 import { useAnimationStore } from '@/store/AnimationStore'
+import { parseAssetMetadata } from '@/utils/gltfMetadata'
 
 export const Character = (props: JSX.IntrinsicElements['group']) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { scale, isMenuVisible } = useModelStore()
   const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset } = useSceneStore()
-  const { currentModel } = useModels()
+  const { currentModel, setLoadedMetadata } = useModels()
   const modelUrl = currentModel.url
-  const { scene, animations } = useGLTF(modelUrl)
+  const gltf = useGLTF(modelUrl)
+  const { scene, animations } = gltf
   const group = React.useRef<THREE.Group>(null)
   const { actions } = useAnimations(animations, group)
   const UNSET_ROUGHNESS = 1
@@ -38,6 +40,11 @@ export const Character = (props: JSX.IntrinsicElements['group']) => {
     })
     return cloned
   }, [scene])
+
+  useEffect(() => {
+    const meta = parseAssetMetadata(gltf.asset as Parameters<typeof parseAssetMetadata>[0])
+    setLoadedMetadata(modelUrl, meta)
+  }, [modelUrl, gltf.asset, setLoadedMetadata])
 
   useEffect(() => { 
     if (!scene) return

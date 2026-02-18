@@ -13,26 +13,26 @@ import XRController from './components/three/XRController'
 import { PanelEnvironmentMenu } from './components/ui/PanelEnvironmentMenu'
 
 const ModelInfoCard = () => {
-  const { currentModel } = useModels();
-  
+  const { displayModel } = useModels();
+
   return (
     <div className="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md rounded-[2px] px-4 py-3 text-white border border-white/10 flex flex-col gap-0">
-      <h3 className="text-xs font-semibold mb-1">{currentModel.name}</h3>
+      <h3 className="text-xs font-semibold mb-1">{displayModel.name}</h3>
       <div className="space-y-0.5 text-xs text-gray-300">
         <p className="mb-0.5">
           <span className="text-xs">Author: </span>
-          {currentModel.authorURL ? (
-            <a href={currentModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
-              {currentModel.author}
+          {displayModel.authorURL ? (
+            <a href={displayModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
+              {displayModel.author}
             </a>
-          ) : ('Unknown')}
+          ) : (displayModel.author || 'Unknown')}
         </p>
         <p className="mb-0.5"><span className="text-xs">License: </span>
-          {currentModel.licenseURL ? (
-          <a href={currentModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
-              {currentModel.license}
+          {displayModel.licenseURL ? (
+          <a href={displayModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
+              {displayModel.license}
             </a>
-          ) : ('Unknown')}
+          ) : (displayModel.license || 'Unknown')}
         </p>
       </div>
     </div>
