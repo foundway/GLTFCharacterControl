@@ -10,6 +10,7 @@ import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
 import XRController from './components/three/XRController'
+import { PanelEnvironmentMenu } from './components/ui/PanelEnvironmentMenu'
 
 const ModelInfoCard = () => {
   const { currentModel } = useModels();
@@ -49,16 +50,16 @@ const ModelSelect = () => {
   return (
     <div>
       <Select value={currentModel.url} onValueChange={handleChange}>
-        <SelectTrigger className="model-select-trigger bg-control text-white rounded-[2px] border-none p-3 h-[40px] hover:bg-control/90 transition-colors cursor-pointer">
+        <SelectTrigger className="model-select-trigger bg-control text-white rounded-[2px] border-none p-3 h-[40px] hover:bg-[#2E3033] transition-colors cursor-pointer">
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
-        <SelectContent className="bg-control text-white border-none p-1">
-          <SelectGroup>
+        <SelectContent className="bg-control text-white rounded-[2px] border-none px-0 py-1">
+          <SelectGroup className="px-0 m-0 border-none">
             {models.map((model) => (
               <SelectItem 
                 key={model.url} 
                 value={model.url}
-                className="hover:bg-control/90 cursor-pointer transition-colors"
+                className="hover:bg-[#2E3033] focus:bg-[#2E3033] focus:text-white cursor-pointer transition-colors rounded-[0px] px-3 py-2"
               >
                 {model.name}
               </SelectItem>
@@ -92,7 +93,7 @@ const UploadButton = () => {
         className="hidden"
       />
       <Button
-        className="bg-control rounded-[2px] gap-1 h-10 w-10 hover:bg-control/90 cursor-pointer px-2"
+        className="bg-control rounded-[2px] gap-1 h-10 w-10 hover:bg-[#2E3033] cursor-pointer px-2"
         onClick={() => fileInputRef.current?.click()}
       >
         <MdOutlineFileUpload size={20} />
@@ -127,10 +128,11 @@ const App = () => {
           </span>
           <ModelInfoCard />
           <Button
-            className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-control/90 cursor-pointer"
+            className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer"
             onClick={() => store.enterAR()}>
             <BsHeadsetVr size={20} />
           </Button>
+          <PanelEnvironmentMenu />
         </div>
       </div>
     </AppContextProvider>

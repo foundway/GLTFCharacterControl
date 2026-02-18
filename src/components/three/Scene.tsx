@@ -20,7 +20,7 @@ const Scene = () => {
 
   return (
     <>
-      <color attach="background" args={['#333333']} />
+      <color attach="background" args={['#1a1a1a']} />
       <Environment />
       <Character />
       {!session && <OrbitControls target={[0, orbitCenter, 0]} />}
