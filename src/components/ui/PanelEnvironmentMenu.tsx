@@ -54,7 +54,7 @@ export const PanelEnvironmentMenu = () => {
   }
 
   return (
-    <div ref={containerRef} className="absolute top-2 right-2" style={{ top: '56px' }}>
+    <div ref={containerRef} className="absolute top-2 right-2 pointer-events-auto" style={{ top: '56px' }}>
       <Button
         className={`${panelStyle} w-[40px] h-[40px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
         onClick={() => setOpen((v) => !v)}

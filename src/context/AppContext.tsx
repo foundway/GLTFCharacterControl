@@ -25,7 +25,6 @@ const Models: ModelItem[] = [
   { name: "Cesium Man", url: 'cesium-man.glb', author: 'Cesium', authorURL: 'https://github.com/KhronosGroup/glTF-Sample-Assets/blob/main/Models/CesiumMan/README.md', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/'},
   { name: "Duck", url: 'duck.glb', author: 'Sony', authorURL: 'https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/Duck', license: 'SCEA Shared Source License, Version 1.0', licenseURL: 'https://spdx.org/licenses/SCEA.html' },
   { name: "Back Alley (Point Cloud)", url: 'lane.glb', author: 'BirdChen', authorURL: 'https://sketchfab.com/bird219', license: 'CC BY 4.0', licenseURL: 'https://creativecommons.org/licenses/by/4.0/' },
-  { name: "Hotel Room (Point Cloud)", url: 'color_point_cloud_-_nyc_hotel_room.glb', author: 'Kaarta', authorURL: 'https://sketchfab.com/kaarta', license: 'CC BY 4.0', licenseURL: 'https://creativecommons.org/licenses/by/4.0/' },
   { name: "Hintze Hall (Point Cloud)", url: 'hintze_hall_nhm_london_point_cloud.glb', author: 'Thomas Flynn', authorURL: 'https://sketchfab.com/nebulousflynn', license: 'CC BY-NC 4.0', licenseURL: 'https://creativecommons.org/licenses/by-nc/4.0/' },
 ]
 

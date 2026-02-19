@@ -15,7 +15,13 @@ interface SceneState {
   orbitCenter: number
   stageRadius: number
   centeringOffset: THREE.Vector3
+  pointScale: number
+  cameraNear: number
+  orbitTarget: [number, number, number] | null
   setCenteringOffset: (offset: THREE.Vector3) => void
+  setPointScale: (scale: number) => void
+  setCameraNear: (near: number) => void
+  setOrbitTarget: (target: [number, number, number] | null) => void
   toggleBackground: () => void
   toggleGrid: () => void
   setEnvironment: (environment: string) => void
@@ -30,7 +36,13 @@ export const useSceneStore = create<SceneState>((set) => ({
   orbitCenter: 0.5,
   stageRadius: 1,
   centeringOffset: new THREE.Vector3(0, 0, 0),
+  pointScale: 1,
+  cameraNear: 0.1,
+  orbitTarget: null,
   setCenteringOffset: (offset) => set({ centeringOffset: offset }),
+  setPointScale: (scale) => set({ pointScale: scale }),
+  setCameraNear: (near) => set({ cameraNear: near }),
+  setOrbitTarget: (target) => set({ orbitTarget: target }),
   toggleBackground: () => set((state) => ({ showBackground: !state.showBackground })),
   toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
   setEnvironment: (environment: string) => set({ currentEnvironment: environment }),

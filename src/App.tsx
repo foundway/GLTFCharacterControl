@@ -1,35 +1,38 @@
-import React from 'react'
-import { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { XR, createXRStore } from '@react-three/xr'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
-
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Scene from '@/components/three/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
-import { BsHeadsetVr } from "react-icons/bs";
-import { MdOutlineFileUpload } from "react-icons/md";
+import { BsHeadsetVr } from 'react-icons/bs'
+import { MdOutlineFileUpload } from 'react-icons/md'
 import XRController from './components/three/XRController'
 import { PanelEnvironmentMenu } from './components/ui/PanelEnvironmentMenu'
+import { PanelPointcloudMenu } from './components/ui/PanelPointcloudMenu'
+import { PanelAnnotationMenu } from './components/ui/PanelAnnotationMenu'
+import { AnnotationDialogs } from './components/ui/AnnotationDialogs'
+import { useAnnotationStore } from './store/AnnotationStore'
 
 const ModelInfoCard = () => {
-  const { displayModel } = useModels();
+  const { displayModel } = useModels()
 
   return (
-    <div className="absolute bottom-2 left-2 bg-black/40 backdrop-blur-md rounded-[2px] px-4 py-3 text-white border border-white/10 flex flex-col gap-0">
-      <h3 className="text-xs font-semibold mb-1">{displayModel.name}</h3>
+    <div className="absolute bottom-2 left-2 w-fit min-w-0 bg-black/40 backdrop-blur-md rounded-[2px] px-4 py-3 text-white border border-white/10 flex flex-col gap-0">
+      <h3 className="text-xs font-semibold mb-1 whitespace-nowrap">{displayModel.name}</h3>
       <div className="space-y-0.5 text-xs text-gray-300">
-        <p className="mb-0.5">
+        <p className="mb-0.5 whitespace-nowrap">
           <span className="text-xs">Author: </span>
           {displayModel.authorURL ? (
-            <a href={displayModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
+            <a href={displayModel.authorURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs">
               {displayModel.author}
             </a>
           ) : (displayModel.author || 'Unknown')}
         </p>
-        <p className="mb-0.5"><span className="text-xs">License: </span>
+        <p className="mb-0.5 whitespace-nowrap">
+          <span className="text-xs">License: </span>
           {displayModel.licenseURL ? (
-          <a href={displayModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs" >
+            <a href={displayModel.licenseURL} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-200 underline text-xs">
               {displayModel.license}
             </a>
           ) : (displayModel.license || 'Unknown')}
@@ -108,32 +111,60 @@ const store = createXRStore({
   bounded: false
 })
 
+const PlacementCursor = () => {
+  const isPlacing = useAnnotationStore((s) => s.isPlacingAnnotation)
+  useEffect(() => {
+    document.body.style.cursor = isPlacing ? 'crosshair' : ''
+    return () => {
+      document.body.style.cursor = ''
+    }
+  }, [isPlacing])
+  return null
+}
+
+const AppOverlay = () => {
+  const { currentModel } = useModels()
+  useEffect(() => {
+    useAnnotationStore.getState().load()
+  }, [])
+  useEffect(() => {
+    useAnnotationStore.getState().setCurrentModelUrl(currentModel.url)
+  }, [currentModel.url])
+
+  return (
+    <div className="pointer-events-none absolute inset-0 flex flex-col z-10">
+      <span className="absolute left-2 top-2 gap-2 flex flex-row pointer-events-auto" style={{ gap: '8px' }}>
+        <UploadButton />
+        <ModelSelect />
+      </span>
+      <div className="absolute bottom-2 left-2 pointer-events-auto">
+        <ModelInfoCard />
+      </div>
+      <Button
+        className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer pointer-events-auto"
+        onClick={() => store.enterAR()}
+      >
+        <BsHeadsetVr size={20} />
+      </Button>
+      <PanelEnvironmentMenu />
+      <PanelPointcloudMenu />
+      <PanelAnnotationMenu />
+      <AnnotationDialogs />
+      <PlacementCursor />
+    </div>
+  )
+}
+
 const App = () => {
   return (
     <AppContextProvider>
       <div style={{ width: '100vw', height: '100vh', backgroundColor: 'black' }}>
-        <Canvas
-          className="pointer-events-none" // block inputs while using UIs
-          camera={{ fov: 50 }}
-          shadows
-        >
+        <Canvas className="pointer-events-auto" camera={{ fov: 50 }} shadows>
           <XR store={store}>
             <Scene />
           </XR>
         </Canvas>
-        <div className="pointer-events-auto">
-          <span className='absolute left-2 top-2 gap-2 flex flex-row' style={{ gap: '8px' }}>
-            <UploadButton />
-            <ModelSelect />
-          </span>
-          <ModelInfoCard />
-          <Button
-            className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer"
-            onClick={() => store.enterAR()}>
-            <BsHeadsetVr size={20} />
-          </Button>
-          <PanelEnvironmentMenu />
-        </div>
+        <AppOverlay />
       </div>
     </AppContextProvider>
   )
