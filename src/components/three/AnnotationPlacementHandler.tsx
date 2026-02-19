@@ -3,33 +3,23 @@ import * as THREE from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useAnnotationStore } from '@/store/AnnotationStore'
 import { useSceneStore } from '@/store/SceneStore'
+import { sceneRaycast } from '@/utils/sceneRaycast'
 
-const FALLBACK_DISTANCE = 10
-const POINTS_THRESHOLD_SCREEN_PX = 1
-
-export const AnnotationPlacementHandler = ({ characterGroupRef }: { characterGroupRef: React.RefObject<THREE.Group | null> }) => {
+export const AnnotationPlacementHandler = ({
+  characterGroupRef,
+}: {
+  characterGroupRef: React.RefObject<THREE.Group | null>
+}) => {
   const planeRef = useRef<THREE.Mesh>(null)
-  const { camera, scene, size } = useThree()
+  const { camera, size } = useThree()
   const { isPlacingAnnotation, add, setPlacing, setOpenInputForId, currentModelUrl } = useAnnotationStore()
   const { stageRadius } = useSceneStore()
 
   const handlePointerDown = (e: { pointer: THREE.Vector2; stopPropagation: () => void }) => {
     e.stopPropagation()
     if (!currentModelUrl) return
-    const raycaster = new THREE.Raycaster()
-    const fovRad = 'fov' in camera ? ((camera as THREE.PerspectiveCamera).fov * Math.PI) / 180 : Math.PI / 4
-    const worldHeightAtDepth = 2 * stageRadius * Math.tan(fovRad / 2)
-    const threshold = (POINTS_THRESHOLD_SCREEN_PX / size.height) * worldHeightAtDepth
-    raycaster.params.Points = { threshold }
-    raycaster.setFromCamera(e.pointer, camera)
-    const plane = planeRef.current
-    const targets: THREE.Object3D[] = []
-    scene.traverse((obj) => {
-      if (obj !== plane && obj !== plane?.parent) targets.push(obj)
-    })
-    const hits = raycaster.intersectObjects(targets, true)
-    const first = hits.find((h) => h.point) ?? null
-    const worldPoint = first?.point ?? new THREE.Vector3(0, 0, 0).addScaledVector(raycaster.ray.direction, FALLBACK_DISTANCE)
+    const worldPoint = sceneRaycast(camera, characterGroupRef.current, e.pointer, size, stageRadius)
+    if (!worldPoint) return
     const position: [number, number, number] = characterGroupRef.current
       ? (() => {
           const inv = new THREE.Matrix4().copy(characterGroupRef.current!.matrixWorld).invert()

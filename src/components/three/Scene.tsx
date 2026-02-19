@@ -8,14 +8,18 @@ import { Character } from '@/components/three/Character'
 import { Environment } from '@/components/three/Environment'
 import { MainMenu } from '@/components/ui/MainMenu'
 import { AnnotationPlacementHandler } from '@/components/three/AnnotationPlacementHandler'
+import { MeasurementPlacementHandler } from '@/components/three/MeasurementPlacementHandler'
+import { MeasurementDisplay } from '@/components/three/MeasurementDisplay'
 import { useSceneStore } from '@/store/SceneStore'
 import { useAnnotationStore } from '@/store/AnnotationStore'
+import { useMeasurementStore } from '@/store/MeasurementStore'
 
 const ANNOTATION_FOCUS_DISTANCE = 4
 
 const Scene = () => {
   const { showGrid, orbitCenter, stageRadius, cameraNear, orbitTarget, setOrbitTarget } = useSceneStore()
   const { getAnnotations, currentModelUrl, flyToAnnotationId, setFlyToAnnotationId } = useAnnotationStore()
+  const isMeasurementMode = useMeasurementStore((s) => s.isMeasurementMode)
   const { camera } = useThree()
   const { session } = useXR()
   const controlsRef = useRef<OrbitControlsImpl>(null)
@@ -60,6 +64,10 @@ const Scene = () => {
       <Environment />
       <Character ref={characterGroupRef} />
       <AnnotationPlacementHandler characterGroupRef={characterGroupRef} />
+      {isMeasurementMode && (
+        <MeasurementPlacementHandler characterGroupRef={characterGroupRef} />
+      )}
+      {isMeasurementMode && <MeasurementDisplay />}
       {!session && <OrbitControls ref={controlsRef} target={[0, orbitCenter, 0]} />}
       {showGrid && (
         <Grid

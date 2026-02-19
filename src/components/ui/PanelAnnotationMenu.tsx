@@ -40,7 +40,7 @@ export const PanelAnnotationMenu = () => {
   }
 
   return (
-    <div ref={containerRef} className="absolute right-2 pointer-events-auto" style={{ top: '152px' }}>
+    <div ref={containerRef} className="relative">
       <Button
         className={`${panelStyle} w-[40px] h-[40px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
         onClick={() => setOpen((v) => !v)}

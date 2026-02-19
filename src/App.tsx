@@ -13,6 +13,8 @@ import { PanelPointcloudMenu } from './components/ui/PanelPointcloudMenu'
 import { PanelAnnotationMenu } from './components/ui/PanelAnnotationMenu'
 import { AnnotationDialogs } from './components/ui/AnnotationDialogs'
 import { useAnnotationStore } from './store/AnnotationStore'
+import { useMeasurementStore } from './store/MeasurementStore'
+import { TbRuler } from 'react-icons/tb'
 
 const ModelInfoCard = () => {
   const { displayModel } = useModels()
@@ -111,14 +113,28 @@ const store = createXRStore({
   bounded: false
 })
 
+const MeasurementButton = () => {
+  const isMeasurementMode = useMeasurementStore((s) => s.isMeasurementMode)
+  const setMeasurementMode = useMeasurementStore((s) => s.setMeasurementMode)
+  return (
+    <Button
+      className={`w-[40px] h-[40px] bg-control rounded-[2px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
+      onClick={() => setMeasurementMode(!isMeasurementMode)}
+    >
+      <TbRuler size={20} className={isMeasurementMode ? 'text-[#32A0C8]' : 'text-white'} />
+    </Button>
+  )
+}
+
 const PlacementCursor = () => {
   const isPlacing = useAnnotationStore((s) => s.isPlacingAnnotation)
+  const isMeasurementMode = useMeasurementStore((s) => s.isMeasurementMode)
   useEffect(() => {
-    document.body.style.cursor = isPlacing ? 'crosshair' : ''
+    document.body.style.cursor = isMeasurementMode || isPlacing ? 'crosshair' : ''
     return () => {
       document.body.style.cursor = ''
     }
-  }, [isPlacing])
+  }, [isPlacing, isMeasurementMode])
   return null
 }
 
@@ -130,6 +146,9 @@ const AppOverlay = () => {
   useEffect(() => {
     useAnnotationStore.getState().setCurrentModelUrl(currentModel.url)
   }, [currentModel.url])
+  useEffect(() => {
+    useMeasurementStore.getState().setMeasurementMode(false)
+  }, [currentModel.url])
 
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col z-10">
@@ -140,15 +159,18 @@ const AppOverlay = () => {
       <div className="absolute bottom-2 left-2 pointer-events-auto">
         <ModelInfoCard />
       </div>
-      <Button
-        className="absolute top-2 right-2 w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer pointer-events-auto"
-        onClick={() => store.enterAR()}
-      >
-        <BsHeadsetVr size={20} />
-      </Button>
-      <PanelEnvironmentMenu />
-      <PanelPointcloudMenu />
-      <PanelAnnotationMenu />
+      <div className="absolute top-2 right-2 flex flex-col gap-2 pointer-events-auto">
+        <Button
+          className="w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer"
+          onClick={() => store.enterAR()}
+        >
+          <BsHeadsetVr size={20} />
+        </Button>
+        <PanelEnvironmentMenu />
+        <PanelPointcloudMenu />
+        <PanelAnnotationMenu />
+        <MeasurementButton />
+      </div>
       <AnnotationDialogs />
       <PlacementCursor />
     </div>
