@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useAnnotationStore } from '@/store/AnnotationStore'
+import { useMeasurementStore } from '@/store/MeasurementStore'
 import { useModels } from '@/context/AppContext'
 import { HiOutlineAnnotation } from 'react-icons/hi'
 
@@ -30,6 +31,7 @@ export const PanelAnnotationMenu = () => {
   }, [open])
 
   const handleAddAnnotation = () => {
+    useMeasurementStore.getState().setMeasurementMode(false)
     setPlacing(true)
     setOpen(false)
   }

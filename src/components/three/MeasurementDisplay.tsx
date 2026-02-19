@@ -7,6 +7,7 @@ import { worldSizeAtDepth } from '@/utils/sceneRaycast'
 
 const POINT_PX = 8
 const LINE_PX = 2
+const MEASUREMENT_RENDER_ORDER = 10000
 
 const Segment = ({
   from,
@@ -37,19 +38,25 @@ const Segment = ({
 
   return (
     <group position={midpoint} quaternion={quat}>
-      <mesh ref={meshRef} renderOrder={1}>
+      <mesh ref={meshRef} renderOrder={MEASUREMENT_RENDER_ORDER}>
         <cylinderGeometry args={[1, 1, length, 8]} />
-        <meshBasicMaterial color="white" depthTest={false} depthWrite={false} />
+        <meshBasicMaterial
+          color="white"
+          transparent
+          opacity={1}
+          depthTest={false}
+          depthWrite={false}
+        />
       </mesh>
       {showLabel && (
-        <Html position={[0, 0, 0]} center style={{ pointerEvents: 'none' }} zIndexRange={[0, 0]}>
+        <Html position={[0, 0, 0]} center style={{ pointerEvents: 'none', zIndex: 10000 }} zIndexRange={[0, 0]}>
           <div
             style={{
               color: 'white',
               fontSize: 14,
               fontFamily: 'sans-serif',
               whiteSpace: 'nowrap',
-              textShadow: '0 0 2px black',
+              textShadow: '0 0 2px black, 0 0 4px black, 1px 1px 0 black, -1px -1px 0 black',
             }}
           >
             {length.toFixed(2)} m
@@ -72,9 +79,15 @@ const PointSphere = ({ position }: { position: THREE.Vector3 }) => {
   })
 
   return (
-    <mesh ref={meshRef} position={position} renderOrder={1}>
+    <mesh ref={meshRef} position={position} renderOrder={MEASUREMENT_RENDER_ORDER}>
       <sphereGeometry args={[1, 16, 16]} />
-      <meshBasicMaterial color="white" depthTest={false} depthWrite={false} />
+      <meshBasicMaterial
+        color="white"
+        transparent
+        opacity={1}
+        depthTest={false}
+        depthWrite={false}
+      />
     </mesh>
   )
 }

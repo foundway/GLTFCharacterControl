@@ -6,15 +6,15 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import Scene from '@/components/three/Scene'
 import { useModels, AppContextProvider } from './context/AppContext'
 import { BsHeadsetVr } from 'react-icons/bs'
-import { MdOutlineFileUpload } from 'react-icons/md'
+import { FaRegFolderOpen } from 'react-icons/fa'
 import XRController from './components/three/XRController'
 import { PanelEnvironmentMenu } from './components/ui/PanelEnvironmentMenu'
-import { PanelPointcloudMenu } from './components/ui/PanelPointcloudMenu'
+import { PanelGeometryMenu } from './components/ui/PanelGeometryMenu'
 import { PanelAnnotationMenu } from './components/ui/PanelAnnotationMenu'
 import { AnnotationDialogs } from './components/ui/AnnotationDialogs'
 import { useAnnotationStore } from './store/AnnotationStore'
 import { useMeasurementStore } from './store/MeasurementStore'
-import { TbRuler } from 'react-icons/tb'
+import { PiRuler } from 'react-icons/pi'
 
 const ModelInfoCard = () => {
   const { displayModel } = useModels()
@@ -101,7 +101,7 @@ const UploadButton = () => {
         className="bg-control rounded-[2px] gap-1 h-10 w-10 hover:bg-[#2E3033] cursor-pointer px-2"
         onClick={() => fileInputRef.current?.click()}
       >
-        <MdOutlineFileUpload size={20} />
+        <FaRegFolderOpen size={20} />
         {/* <p className="text-white text-xs"></p> */}
       </Button>
     </>
@@ -119,9 +119,12 @@ const MeasurementButton = () => {
   return (
     <Button
       className={`w-[40px] h-[40px] bg-control rounded-[2px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
-      onClick={() => setMeasurementMode(!isMeasurementMode)}
+      onClick={() => {
+        useAnnotationStore.getState().setPlacing(false)
+        setMeasurementMode(!isMeasurementMode)
+      }}
     >
-      <TbRuler size={20} className={isMeasurementMode ? 'text-[#32A0C8]' : 'text-white'} />
+      <PiRuler size={20} className={isMeasurementMode ? 'text-[#32A0C8]' : 'text-white'} />
     </Button>
   )
 }
@@ -153,8 +156,8 @@ const AppOverlay = () => {
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col z-10">
       <span className="absolute left-2 top-2 gap-2 flex flex-row pointer-events-auto" style={{ gap: '8px' }}>
-        <UploadButton />
         <ModelSelect />
+        <UploadButton />
       </span>
       <div className="absolute bottom-2 left-2 pointer-events-auto">
         <ModelInfoCard />
@@ -167,7 +170,7 @@ const AppOverlay = () => {
           <BsHeadsetVr size={20} />
         </Button>
         <PanelEnvironmentMenu />
-        <PanelPointcloudMenu />
+        <PanelGeometryMenu />
         <PanelAnnotationMenu />
         <MeasurementButton />
       </div>

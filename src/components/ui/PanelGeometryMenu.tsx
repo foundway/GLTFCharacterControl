@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { useSceneStore } from '@/store/SceneStore'
-import { VscActivateBreakpoints } from 'react-icons/vsc'
+import { LuShapes } from 'react-icons/lu'
 
 const panelStyle = 'bg-control text-white rounded-[2px] border-none'
 const sliderStyle =
   'w-full h-2 bg-[#2E3033] rounded appearance-none cursor-pointer accent-white [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white'
 
-export const PanelPointcloudMenu = () => {
+export const PanelGeometryMenu = () => {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const { pointScale, cameraNear, setPointScale, setCameraNear } = useSceneStore()
@@ -30,7 +30,7 @@ export const PanelPointcloudMenu = () => {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
       >
-        <VscActivateBreakpoints size={20} />
+        <LuShapes size={20} />
       </Button>
       {open && (
         <div

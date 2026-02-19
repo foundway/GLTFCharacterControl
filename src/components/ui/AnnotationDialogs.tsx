@@ -49,6 +49,9 @@ export const AnnotationDialogs = () => {
   }
 
   const handleInputCancel = () => {
+    if (openInputForId) {
+      remove(currentModel.url, openInputForId)
+    }
     setOpenInputForId(null)
   }
 
