@@ -1,5 +1,8 @@
+import { useState, useEffect, useRef } from 'react'
+
 const MARKER_SIZE_PX = 36
 const PANEL_BUTTON_BG = '#2E3033'
+const TRANSITION_DURATION_MS = 300
 
 export const AnnotationMarkerBadge = ({
   index,
@@ -13,6 +16,42 @@ export const AnnotationMarkerBadge = ({
   const isOffScreen = offScreen != null
   const angleDeg = offScreen ? (offScreen.angleRad * 180) / Math.PI : 0
   const sharpCornerOffsetDeg = -135
+  const prevIsOffScreenRef = useRef<boolean>(false)
+  const [delayedRotationDeg, setDelayedRotationDeg] = useState<number>(0)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    const wasOffScreen = prevIsOffScreenRef.current
+    const isNowOnScreen = !isOffScreen && wasOffScreen
+
+    if (isNowOnScreen) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
+        setDelayedRotationDeg(0)
+        timeoutRef.current = null
+      }, TRANSITION_DURATION_MS)
+    } else if (isOffScreen) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+      const newRotation = angleDeg + sharpCornerOffsetDeg
+      setDelayedRotationDeg(newRotation)
+    }
+
+    prevIsOffScreenRef.current = isOffScreen
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [isOffScreen, angleDeg, sharpCornerOffsetDeg])
+
+  const rotationDeg = isOffScreen ? angleDeg + sharpCornerOffsetDeg : delayedRotationDeg
+  const counterRotationDeg = isOffScreen ? -(angleDeg + sharpCornerOffsetDeg) : -delayedRotationDeg
 
   return (
     <div
@@ -20,7 +59,7 @@ export const AnnotationMarkerBadge = ({
         position: 'relative',
         width: MARKER_SIZE_PX,
         height: MARKER_SIZE_PX,
-        transform: isOffScreen ? `rotate(${angleDeg + sharpCornerOffsetDeg}deg)` : undefined,
+        transform: `rotate(${rotationDeg}deg)`,
         transformOrigin: 'center center',
       }}
     >
@@ -48,12 +87,13 @@ export const AnnotationMarkerBadge = ({
           justifyContent: 'center',
           cursor: 'pointer',
           opacity: isOffScreen ? 0.5 : 1,
+          transition: `opacity ${TRANSITION_DURATION_MS}ms ease-out, border-radius ${TRANSITION_DURATION_MS}ms ease-out`,
         }}
       >
         <span
           style={{
             display: 'inline-block',
-            transform: isOffScreen ? `rotate(${-(angleDeg + sharpCornerOffsetDeg)}deg)` : undefined,
+            transform: `rotate(${counterRotationDeg}deg)`,
             transformOrigin: 'center center',
           }}
         >
