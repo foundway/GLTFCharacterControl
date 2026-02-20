@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { X } from 'lucide-react'
 import { useAnnotationStore } from '@/store/AnnotationStore'
 import { useModels } from '@/context/AppContext'
 
@@ -115,19 +116,21 @@ export const AnnotationDialogs = () => {
       {showView && (
         <div className={overlayStyle} onClick={(e) => e.target === e.currentTarget && handleViewClose()}>
           <div className={cardStyle} onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-sm font-semibold">Annotation</h3>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="text-sm font-semibold">Annotation</h3>
+              <button
+                type="button"
+                onClick={handleViewClose}
+                className="text-gray-400 hover:text-white cursor-pointer p-1 -mt-1 -mr-1 transition-colors"
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
             <p className="text-sm text-gray-300 whitespace-pre-wrap break-words">
               {viewAnnotation.text || '(No text)'}
             </p>
             <div className="flex gap-2 justify-end flex-wrap">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="bg-[#2E3033] text-white hover:bg-[#3d4045] cursor-pointer"
-                onClick={handleViewClose}
-              >
-                Close
-              </Button>
               <Button size="sm" variant="secondary" className="bg-[#2E3033] text-white hover:bg-[#3d4045] cursor-pointer" onClick={handleViewEdit}>
                 Edit
               </Button>
