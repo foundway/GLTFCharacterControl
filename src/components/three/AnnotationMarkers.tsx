@@ -1,8 +1,11 @@
+import { useRef, useCallback, useState } from 'react'
+import { useFrame } from '@react-three/fiber'
+import * as THREE from 'three'
 import { Html } from '@react-three/drei'
 import { useAnnotationStore } from '@/store/AnnotationStore'
+import { AnnotationMarkerBadge } from '@/components/ui/AnnotationMarkerBadge'
 
-const MARKER_SIZE_PX = 36
-const PANEL_BUTTON_BG = '#2E3033'
+const OFF_SCREEN_MARGIN = 80
 
 const SingleMarker = ({
   position,
@@ -12,37 +15,79 @@ const SingleMarker = ({
   position: [number, number, number]
   index: number
   onSelect: () => void
-}) => (
-  <Html position={position} center style={{ pointerEvents: 'auto' }} zIndexRange={[0, 0]}>
-    <button
-      type="button"
-      onClick={(e) => {
-        e.stopPropagation()
-        onSelect()
-      }}
-      style={{
-        width: MARKER_SIZE_PX,
-        height: MARKER_SIZE_PX,
-        minWidth: MARKER_SIZE_PX,
-        minHeight: MARKER_SIZE_PX,
-        padding: 0,
-        margin: 0,
-        border: 'none',
-        borderRadius: 18,
-        background: PANEL_BUTTON_BG,
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 600,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-      }}
+}) => {
+  const offScreenRef = useRef<{ isOffScreen: boolean; angle: number } | null>(null)
+  const [offScreenState, setOffScreenState] = useState<{ isOffScreen: boolean; angle: number } | null>(null)
+
+  useFrame(() => {
+    if (offScreenRef.current) {
+      setOffScreenState(offScreenRef.current)
+    }
+  })
+
+  const calculatePosition = useCallback(
+    (el: THREE.Object3D, camera: THREE.Camera, size: { width: number; height: number }) => {
+      const worldPos = new THREE.Vector3().setFromMatrixPosition(el.matrixWorld)
+      worldPos.project(camera)
+
+      let ndcX = worldPos.x
+      let ndcY = worldPos.y
+      const isBehind = worldPos.z > 1
+
+      if (isBehind) {
+        ndcX = -ndcX
+        ndcY = -ndcY
+      }
+
+      const marginNDCX = (OFF_SCREEN_MARGIN / size.width) * 2
+      const marginNDCY = (OFF_SCREEN_MARGIN / size.height) * 2
+      const maxNDCX = 1 - marginNDCX
+      const maxNDCY = 1 - marginNDCY
+
+      const isOffScreen =
+        isBehind || Math.abs(ndcX) > maxNDCX || Math.abs(ndcY) > maxNDCY
+
+      let clampedX = ndcX
+      let clampedY = ndcY
+
+      if (isOffScreen) {
+        if (Math.abs(ndcX) > maxNDCX) {
+          clampedX = ndcX > 0 ? maxNDCX : -maxNDCX
+        }
+        if (Math.abs(ndcY) > maxNDCY) {
+          clampedY = ndcY > 0 ? maxNDCY : -maxNDCY
+        }
+        const angle = Math.atan2(-ndcY, ndcX)
+        offScreenRef.current = { isOffScreen: true, angle }
+      } else {
+        offScreenRef.current = { isOffScreen: false, angle: 0 }
+      }
+
+      const widthHalf = size.width / 2
+      const heightHalf = size.height / 2
+      const x = clampedX * widthHalf + widthHalf
+      const y = -(clampedY * heightHalf) + heightHalf
+
+      return [x, y]
+    },
+    []
+  )
+
+  const offScreen =
+    offScreenState?.isOffScreen ? { angleRad: offScreenState.angle } : undefined
+
+  return (
+    <Html
+      position={position}
+      center
+      style={{ pointerEvents: 'auto' }}
+      zIndexRange={[0, 0]}
+      calculatePosition={calculatePosition}
     >
-      {index}
-    </button>
-  </Html>
-)
+      <AnnotationMarkerBadge index={index} onSelect={onSelect} offScreen={offScreen} />
+    </Html>
+  )
+}
 
 export const AnnotationMarkers = () => {
   const currentModelUrl = useAnnotationStore((s) => s.currentModelUrl)
