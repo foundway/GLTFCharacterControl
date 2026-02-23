@@ -37,6 +37,7 @@ export const sceneRaycast = (
   const _toCamera = new THREE.Vector3()
   const validHits = hits.filter((h) => {
     if (!h.point) return false
+    if (h.object instanceof THREE.Line || h.object instanceof THREE.LineSegments) return false
     if (h.object instanceof THREE.Mesh && h.face != null) {
       _normal.copy(h.face.normal).transformDirection(h.object.matrixWorld)
       _toCamera.subVectors(
