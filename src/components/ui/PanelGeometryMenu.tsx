@@ -10,7 +10,7 @@ const sliderStyle =
 export const PanelGeometryMenu = () => {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { pointScale, cameraNear, setPointScale, setCameraNear } = useSceneStore()
+  const { pointScale, pointDisplayPercent, cameraNear, setPointScale, setPointDisplayPercent, setCameraNear } = useSceneStore()
 
   useEffect(() => {
     if (!open) return
@@ -53,13 +53,28 @@ export const PanelGeometryMenu = () => {
           </label>
           <label className="flex flex-col gap-1.5 text-sm">
             <span className="flex justify-between">
+              <span>Point %</span>
+              <span className="text-gray-400 tabular-nums">{pointDisplayPercent.toFixed(1)}%</span>
+            </span>
+            <input
+              type="range"
+              min={0.01}
+              max={100}
+              step={0.01}
+              value={pointDisplayPercent}
+              onChange={(e) => setPointDisplayPercent(Number(e.target.value))}
+              className={sliderStyle}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="flex justify-between">
               <span>Clipping</span>
               <span className="text-gray-400 tabular-nums">{cameraNear.toFixed(1)}</span>
             </span>
             <input
               type="range"
               min={0.1}
-              max={10}
+              max={100}
               step={0.1}
               value={cameraNear}
               onChange={(e) => setCameraNear(Number(e.target.value))}

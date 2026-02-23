@@ -13,7 +13,7 @@ import { AnnotationMarkers } from '@/components/three/AnnotationMarkers'
 export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { scale, isMenuVisible } = useModelStore()
-  const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset, pointScale } = useSceneStore()
+  const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset, pointScale, pointDisplayPercent } = useSceneStore()
   const { currentModel, setLoadedMetadata } = useModels()
   const modelUrl = currentModel.url
   const gltf = useGLTF(modelUrl)
@@ -77,9 +77,15 @@ export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>
     clone.traverse((child) => {
       if (child instanceof THREE.Points && child.material instanceof THREE.PointsMaterial) {
         child.material.size = pointScale
+        const geom = child.geometry
+        if (geom?.attributes?.position) {
+          const total = geom.attributes.position.count
+          const count = pointDisplayPercent >= 100 ? total : Math.max(1, Math.floor((total * pointDisplayPercent) / 100))
+          geom.setDrawRange(0, count)
+        }
       }
     })
-  }, [clone, pointScale])
+  }, [clone, pointScale, pointDisplayPercent])
 
   return (
     <HandleTarget>
