@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { X } from 'lucide-react'
+import { Loader2, Sparkles, X } from 'lucide-react'
 import { useAnnotationStore } from '@/store/AnnotationStore'
 import { useModels } from '@/context/AppContext'
 
@@ -26,6 +26,15 @@ export const AnnotationDialogs = () => {
 
   const [editText, setEditText] = useState('')
   const [editingViewId, setEditingViewId] = useState<string | null>(null)
+  const [aiAssistLoading, setAiAssistLoading] = useState(false)
+  const aiAssistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearAiAssistTimeout = () => {
+    if (aiAssistTimeoutRef.current) {
+      clearTimeout(aiAssistTimeoutRef.current)
+      aiAssistTimeoutRef.current = null
+    }
+  }
 
   useEffect(() => {
     if (openInputForId) {
@@ -33,6 +42,24 @@ export const AnnotationDialogs = () => {
       setEditText(a?.text ?? '')
     }
   }, [openInputForId, annotations])
+
+  useEffect(() => {
+    clearAiAssistTimeout()
+    setAiAssistLoading(false)
+  }, [openInputForId])
+
+  useEffect(() => () => clearAiAssistTimeout(), [])
+
+  const handleAiAssistClick = () => {
+    if (aiAssistLoading) return
+    setAiAssistLoading(true)
+    clearAiAssistTimeout()
+    aiAssistTimeoutRef.current = setTimeout(() => {
+      setEditText('A blue vehicle')
+      setAiAssistLoading(false)
+      aiAssistTimeoutRef.current = null
+    }, 1000)
+  }
 
   useEffect(() => {
     if (openViewForId) {
@@ -43,6 +70,8 @@ export const AnnotationDialogs = () => {
   }, [openViewForId, annotations])
 
   const handleInputSubmit = () => {
+    clearAiAssistTimeout()
+    setAiAssistLoading(false)
     if (openInputForId) {
       update(currentModel.url, openInputForId, editText)
       setOpenInputForId(null)
@@ -50,6 +79,8 @@ export const AnnotationDialogs = () => {
   }
 
   const handleInputCancel = () => {
+    clearAiAssistTimeout()
+    setAiAssistLoading(false)
     if (openInputForId) {
       remove(currentModel.url, openInputForId)
     }
@@ -88,7 +119,23 @@ export const AnnotationDialogs = () => {
       {showInput && (
         <div className={overlayStyle} onClick={(e) => e.target === e.currentTarget && handleInputCancel()}>
           <div className={cardStyle} onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-sm font-semibold">Annotation</h3>
+            <div className="flex items-center justify-between gap-2">
+              <h3 className="text-sm font-semibold">Annotation</h3>
+              <button
+                type="button"
+                className="shrink-0 h-8 w-8 flex items-center justify-center rounded-[8px] bg-[#2E3033] text-white hover:bg-[#3d4045] hover:text-white cursor-pointer transition-colors disabled:opacity-70"
+                disabled={aiAssistLoading}
+                aria-label={aiAssistLoading ? 'Generating…' : 'AI-assisted annotation'}
+                aria-busy={aiAssistLoading}
+                onClick={handleAiAssistClick}
+              >
+                {aiAssistLoading ? (
+                  <Loader2 size={18} strokeWidth={1.75} className="animate-spin" />
+                ) : (
+                  <Sparkles size={18} strokeWidth={1.75} />
+                )}
+              </button>
+            </div>
             <textarea
               className="w-full min-h-[80px] px-3 py-2 bg-[#2E3033] text-white rounded-[2px] border-none text-sm resize-y"
               placeholder="Enter annotation text..."
