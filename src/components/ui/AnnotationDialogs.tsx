@@ -55,7 +55,7 @@ export const AnnotationDialogs = () => {
     setAiAssistLoading(true)
     clearAiAssistTimeout()
     aiAssistTimeoutRef.current = setTimeout(() => {
-      setEditText('A blue vehicle')
+      setEditText('Red motorcycle')
       setAiAssistLoading(false)
       aiAssistTimeoutRef.current = null
     }, 1000)
