@@ -5,6 +5,7 @@ import { OrbitControls, Grid } from '@react-three/drei'
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import { useXR, XROrigin } from '@react-three/xr'
 import { Character } from '@/components/three/Character'
+import { UISampler } from '@/components/three/UISampler'
 import { Environment } from '@/components/three/Environment'
 import { MainMenu } from '@/components/ui/MainMenu'
 import { AnnotationPlacementHandler } from '@/components/three/AnnotationPlacementHandler'
@@ -63,6 +64,7 @@ const Scene = () => {
       <color attach="background" args={['#1a1a1a']} />
       <Environment />
       <Character ref={characterGroupRef} />
+      <UISampler targetRef={characterGroupRef} />
       <AnnotationPlacementHandler characterGroupRef={characterGroupRef} />
       {isMeasurementMode && (
         <MeasurementPlacementHandler characterGroupRef={characterGroupRef} />

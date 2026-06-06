@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState, type RefObject } from 'react'
+import * as THREE from 'three'
+import { useFrame, useThree } from '@react-three/fiber'
 import { Root, Container, Text, setPreferredColorScheme } from '@react-three/uikit'
 import {
   Card,
@@ -20,9 +22,18 @@ import { themes } from '@react-three/uikit-default/dist/themes.js'
 import { useSceneStore } from '@/store/SceneStore'
 
 const PANEL_WIDTH = 360
-const PANEL_HEIGHT = 620 // nominal rendered height, used only for fit math
-const FRONT_GAP = 0.01
-const FACE_FILL = 0.9 // fraction of the front face the panel should occupy
+const PIXEL_SIZE = 0.0014 // fixed meters-per-UI-pixel; panel size is independent of the model
+const OUTSIDE_GAP = 0.1 // world clearance between the bounding box surface and the panel
+const DAMP = 8 // higher = snappier; lower = more easing as the object/user moves
+
+// Reused across frames to avoid per-frame allocations.
+const _box = new THREE.Box3()
+const _center = new THREE.Vector3()
+const _camPos = new THREE.Vector3()
+const _dir = new THREE.Vector3()
+const _target = new THREE.Vector3()
+const _prevQuat = new THREE.Quaternion()
+const _targetQuat = new THREE.Quaternion()
 
 // Meta Horizon OS dark theme: neutral grays, soft-white primary actions, blue accent.
 // Pure white/black are avoided per the OS color guidance (no darker than #1A1A1A).
@@ -167,22 +178,67 @@ const SamplerPanel = () => {
   )
 }
 
-export const UISampler = () => {
+export const UISampler = ({ targetRef }: { targetRef: RefObject<THREE.Object3D | null> }) => {
   const showUISampler = useSceneStore((s) => s.showUISampler)
-  const modelSize = useSceneStore((s) => s.modelSize)
-
-  if (!showUISampler) return null
+  const groupRef = useRef<THREE.Group>(null)
+  const placed = useRef(false)
+  const camera = useThree((s) => s.camera)
 
   setPreferredColorScheme('dark')
 
-  // Fit the panel within the front face: limit by whichever of width/height is tighter.
-  const pixelSize = Math.min((modelSize.x * FACE_FILL) / PANEL_WIDTH, (modelSize.y * FACE_FILL) / PANEL_HEIGHT)
+  useFrame((_, delta) => {
+    const group = groupRef.current
+    const target = targetRef.current
+    if (!showUISampler || !group || !target) {
+      placed.current = false
+      return
+    }
+
+    _box.setFromObject(target)
+    if (_box.isEmpty()) return
+    _box.getCenter(_center)
+    camera.getWorldPosition(_camPos)
+
+    // Horizontal direction from the object toward the user (ignore height).
+    _dir.set(_camPos.x - _center.x, 0, _camPos.z - _center.z)
+    if (_dir.lengthSq() < 1e-6) _dir.set(0, 0, 1)
+    _dir.normalize()
+
+    // Distance from the center to where the ray exits the AABB, then add clearance.
+    const hx = (_box.max.x - _box.min.x) / 2
+    const hz = (_box.max.z - _box.min.z) / 2
+    let exit = Infinity
+    if (Math.abs(_dir.x) > 1e-6) exit = Math.min(exit, hx / Math.abs(_dir.x))
+    if (Math.abs(_dir.z) > 1e-6) exit = Math.min(exit, hz / Math.abs(_dir.z))
+    const dist = exit + OUTSIDE_GAP
+
+    // Stay within the object's vertical bounds, but prefer the user's eye level.
+    const y = THREE.MathUtils.clamp(_camPos.y, _box.min.y, _box.max.y)
+
+    _target.set(_center.x + _dir.x * dist, y, _center.z + _dir.z * dist)
+
+    // Target orientation (reuse Object3D.lookAt, then restore for damping).
+    _prevQuat.copy(group.quaternion)
+    group.lookAt(_camPos)
+    _targetQuat.copy(group.quaternion)
+
+    if (placed.current) {
+      const t = 1 - Math.exp(-DAMP * delta) // frame-rate independent easing
+      group.position.lerp(_target, t)
+      group.quaternion.slerpQuaternions(_prevQuat, _targetQuat, t)
+    } else {
+      group.position.copy(_target) // snap on first appearance, then ease afterwards
+      placed.current = true
+    }
+  })
 
   return (
-    <group position={[0, modelSize.y / 2, modelSize.z / 2 + FRONT_GAP]}>
-      <Root pixelSize={pixelSize} flexDirection="column" alignItems="center" depthTest={false}>
-        <SamplerPanel />
-      </Root>
+    <group ref={groupRef}>
+      {showUISampler && (
+        <Root pixelSize={PIXEL_SIZE} flexDirection="column" alignItems="center" depthTest={false}>
+          <SamplerPanel />
+        </Root>
+      )}
     </group>
   )
 }

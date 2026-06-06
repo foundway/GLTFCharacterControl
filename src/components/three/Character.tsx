@@ -9,7 +9,6 @@ import { useSceneStore } from '@/store/SceneStore'
 import { useAnimationStore } from '@/store/AnimationStore'
 import { parseAssetMetadata } from '@/utils/gltfMetadata'
 import { AnnotationMarkers } from '@/components/three/AnnotationMarkers'
-import { UISampler } from '@/components/three/UISampler'
 
 export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
@@ -96,7 +95,6 @@ export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>
           <group ref={(el) => { group.current = el; if (typeof ref === 'function') ref(el); else if (ref) ref.current = el }}>
             <primitive object={clone} position={centeringOffset} userData={{ isCharacter: true }} />
             <AnnotationMarkers />
-            <UISampler />
           </group>
         </Handle>
       </group>

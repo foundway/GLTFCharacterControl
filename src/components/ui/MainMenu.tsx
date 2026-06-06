@@ -64,8 +64,11 @@ export const MainMenu = () => {
     setScale(1)
     scene.traverse((object) => {
       if (object instanceof Object3D && object.userData.isCharacter) {
-        object.parent?.position.set(0, 0, 0)
-        object.parent?.rotation.set(0, 0, 0)
+        // The XR grab handle transforms the character's grandparent group, so reset
+        // it (not just the immediate parent) to clear translation and rotation.
+        const grabbed = object.parent?.parent
+        grabbed?.position.set(0, 0, 0)
+        grabbed?.rotation.set(0, 0, 0)
       }
     })
   }
