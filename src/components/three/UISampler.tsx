@@ -12,14 +12,50 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
+  baseBorderRadius,
+  colors,
 } from '@react-three/uikit-default'
 import { Wifi, Bluetooth, BatteryFull, Search, Bell, Volume2, User, Play } from '@react-three/uikit-lucide'
+import { themes } from '@react-three/uikit-default/dist/themes.js'
 import { useSceneStore } from '@/store/SceneStore'
 
 const PANEL_WIDTH = 360
 const PANEL_HEIGHT = 620 // nominal rendered height, used only for fit math
 const FRONT_GAP = 0.01
 const FACE_FILL = 0.9 // fraction of the front face the panel should occupy
+
+// Meta Horizon OS dark theme: neutral grays, soft-white primary actions, blue accent.
+// Pure white/black are avoided per the OS color guidance (no darker than #1A1A1A).
+const HORIZON_ACCENT = '#1c7ae0'
+const HORIZON_DARK = {
+  background: '#2b2b2e',
+  foreground: '#ebebeb',
+  card: '#1c1c1e',
+  cardForeground: '#ebebeb',
+  popover: '#1c1c1e',
+  popoverForeground: '#ebebeb',
+  primary: '#f5f5f5',
+  primaryForeground: '#1c1c1e',
+  secondary: '#3a3a3d',
+  secondaryForeground: '#ebebeb',
+  muted: '#262629',
+  mutedForeground: '#b0b3b8',
+  accent: '#3a3a3d',
+  accentForeground: '#ebebeb',
+  destructive: '#e5484d',
+  destructiveForeground: '#f5f5f5',
+  border: '#3a3a3d',
+  input: '#48484b',
+  ring: HORIZON_ACCENT,
+} as const
+
+// Mutate the default kit's active palette in place (Color.set avoids readonly typing),
+// so every uikit component picks up Horizon tokens without per-instance overrides.
+for (const key in HORIZON_DARK) {
+  const token = key as keyof typeof HORIZON_DARK
+  themes.slate.dark[token].set(HORIZON_DARK[token])
+}
+baseBorderRadius.value = 16 // Horizon's generously rounded corners
 
 const Row = ({ children }: { children: React.ReactNode }) => (
   <Container flexDirection="row" alignItems="center" justifyContent="space-between" gap={12}>
@@ -33,7 +69,7 @@ const SamplerPanel = () => {
   const [volume, setVolume] = useState(60)
 
   return (
-    <Card flexDirection="column" gap={14} padding={18} borderRadius={32} width={PANEL_WIDTH}>
+    <Card flexDirection="column" gap={14} padding={18} borderRadius={32} width={PANEL_WIDTH} borderColor={colors.input}>
       <Row>
         <Text fontSize={13} fontWeight="medium" opacity={0.7}>
           9:41
@@ -47,14 +83,14 @@ const SamplerPanel = () => {
 
       <Row>
         <Container flexDirection="row" alignItems="center" gap={10}>
-          <Container width={40} height={40} borderRadius={20} backgroundColor="#32A0C8" alignItems="center" justifyContent="center">
-            <User width={20} height={20} color="white" />
+          <Container width={40} height={40} borderRadius={20} backgroundColor={HORIZON_ACCENT} alignItems="center" justifyContent="center">
+            <User width={20} height={20} color="#f5f5f5" />
           </Container>
           <Container flexDirection="column">
             <Text fontSize={16} fontWeight="bold">
               Quest UI
             </Text>
-            <Text fontSize={12} opacity={0.6}>
+            <Text fontSize={11} opacity={0.6}>
               Component sampler
             </Text>
           </Container>
@@ -78,7 +114,7 @@ const SamplerPanel = () => {
         </TabsList>
       </Tabs>
 
-      <Container flexDirection="row" alignItems="center" gap={8} borderRadius={24} backgroundColor="#1f1f1f" paddingX={14} paddingY={10}>
+      <Container flexDirection="row" alignItems="center" gap={8} borderRadius={24} backgroundColor="#262629" paddingX={14} paddingY={10}>
         <Search width={16} height={16} opacity={0.6} />
         <Input flexGrow={1} placeholder="Search apps and games" fontSize={13} />
       </Container>
@@ -111,7 +147,7 @@ const SamplerPanel = () => {
           <Text fontSize={13} opacity={0.7}>
             Storage
           </Text>
-          <Text fontSize={12} opacity={0.5}>
+          <Text fontSize={11} opacity={0.5}>
             48 / 128 GB
           </Text>
         </Row>
