@@ -14,7 +14,9 @@ import { PanelAnnotationMenu } from './components/ui/PanelAnnotationMenu'
 import { AnnotationDialogs } from './components/ui/AnnotationDialogs'
 import { useAnnotationStore } from './store/AnnotationStore'
 import { useMeasurementStore } from './store/MeasurementStore'
+import { useSceneStore } from './store/SceneStore'
 import { PiRuler } from 'react-icons/pi'
+import { LuLayoutPanelTop } from 'react-icons/lu'
 
 const ModelInfoCard = () => {
   const { displayModel } = useModels()
@@ -129,6 +131,19 @@ const MeasurementButton = () => {
   )
 }
 
+const UISamplerButton = () => {
+  const showUISampler = useSceneStore((s) => s.showUISampler)
+  const toggleUISampler = useSceneStore((s) => s.toggleUISampler)
+  return (
+    <Button
+      className={`w-[40px] h-[40px] bg-control rounded-[2px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
+      onClick={toggleUISampler}
+    >
+      <LuLayoutPanelTop size={20} className={showUISampler ? 'text-[#32A0C8]' : 'text-white'} />
+    </Button>
+  )
+}
+
 const PlacementCursor = () => {
   const isPlacing = useAnnotationStore((s) => s.isPlacingAnnotation)
   const isMeasurementMode = useMeasurementStore((s) => s.isMeasurementMode)
@@ -173,6 +188,7 @@ const AppOverlay = () => {
         <PanelGeometryMenu />
         <PanelAnnotationMenu />
         <MeasurementButton />
+        <UISamplerButton />
       </div>
       <AnnotationDialogs />
       <PlacementCursor />

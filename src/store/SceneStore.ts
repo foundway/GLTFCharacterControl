@@ -15,10 +15,14 @@ interface SceneState {
   orbitCenter: number
   stageRadius: number
   centeringOffset: THREE.Vector3
+  modelSize: THREE.Vector3
+  showUISampler: boolean
   pointScale: number
   pointDisplayPercent: number
   cameraNear: number
   orbitTarget: [number, number, number] | null
+  setModelSize: (size: THREE.Vector3) => void
+  toggleUISampler: () => void
   setCenteringOffset: (offset: THREE.Vector3) => void
   setPointScale: (scale: number) => void
   setPointDisplayPercent: (percent: number) => void
@@ -38,10 +42,14 @@ export const useSceneStore = create<SceneState>((set) => ({
   orbitCenter: 0.5,
   stageRadius: 1,
   centeringOffset: new THREE.Vector3(0, 0, 0),
+  modelSize: new THREE.Vector3(1, 1, 1),
+  showUISampler: false,
   pointScale: 1,
   pointDisplayPercent: 100,
   cameraNear: 0.1,
   orbitTarget: null,
+  setModelSize: (size) => set({ modelSize: size }),
+  toggleUISampler: () => set((state) => ({ showUISampler: !state.showUISampler })),
   setCenteringOffset: (offset) => set({ centeringOffset: offset }),
   setPointScale: (scale) => set({ pointScale: scale }),
   setPointDisplayPercent: (percent) => set({ pointDisplayPercent: percent }),

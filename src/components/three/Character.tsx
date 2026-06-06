@@ -9,11 +9,12 @@ import { useSceneStore } from '@/store/SceneStore'
 import { useAnimationStore } from '@/store/AnimationStore'
 import { parseAssetMetadata } from '@/utils/gltfMetadata'
 import { AnnotationMarkers } from '@/components/three/AnnotationMarkers'
+import { UISampler } from '@/components/three/UISampler'
 
 export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>((props, ref) => {  
   const { currentAnimation, setCurrentAnimation, setAnimations } = useAnimationStore()
   const { scale, isMenuVisible } = useModelStore()
-  const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset, pointScale, pointDisplayPercent } = useSceneStore()
+  const { centeringOffset, setOrbitCenter, setStageRadius, setCenteringOffset, setModelSize, pointScale, pointDisplayPercent } = useSceneStore()
   const { currentModel, setLoadedMetadata } = useModels()
   const modelUrl = currentModel.url
   const gltf = useGLTF(modelUrl)
@@ -57,6 +58,7 @@ export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>
     setCenteringOffset(new THREE.Vector3(-center.x, -min.y, -center.z))
     setOrbitCenter(size.y/2)
     setStageRadius(radius)
+    setModelSize(size)
   }, [scene])
 
   useEffect(() => { // Set animation list and play first animation on load
@@ -94,6 +96,7 @@ export const Character = forwardRef<THREE.Group, JSX.IntrinsicElements['group']>
           <group ref={(el) => { group.current = el; if (typeof ref === 'function') ref(el); else if (ref) ref.current = el }}>
             <primitive object={clone} position={centeringOffset} userData={{ isCharacter: true }} />
             <AnnotationMarkers />
+            <UISampler />
           </group>
         </Handle>
       </group>
