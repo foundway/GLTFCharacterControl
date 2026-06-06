@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { Container, Text, } from '@react-three/uikit'
 import { Button, Slider } from '@react-three/uikit-default'
 import { useModelStore } from "../../store/ModelStore"
+import { useSceneStore } from "../../store/SceneStore"
 import { useThree } from '@react-three/fiber'
 import { SubMenu } from './SubMenu'
 import { Separator } from './Separator'
@@ -27,6 +28,7 @@ const InputSlider = () => {
 export const GeometryMenu = () => {
   const { scene } = useThree()
   const { setScale } = useModelStore()
+  const toggleUISampler = useSceneStore((s) => s.toggleUISampler)
 
   const resetTransformation = () => {
     setScale(1)
@@ -48,6 +50,10 @@ export const GeometryMenu = () => {
       <Separator />
       <Button variant="ghost" onClick={resetTransformation}>
         <Text width={"100%"}>Reset Transformation</Text>
+      </Button>
+      <Separator />
+      <Button variant="ghost" onClick={toggleUISampler}>
+        <Text width={"100%"}>Toggle UI</Text>
       </Button>
     </SubMenu>
   )
