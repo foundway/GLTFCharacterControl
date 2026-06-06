@@ -158,6 +158,7 @@ const PlacementCursor = () => {
 
 const AppOverlay = () => {
   const { currentModel } = useModels()
+  const showUISampler = useSceneStore((s) => s.showUISampler)
   useEffect(() => {
     useAnnotationStore.getState().load()
   }, [])
@@ -170,27 +171,35 @@ const AppOverlay = () => {
 
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col z-10">
-      <span className="absolute left-2 top-2 gap-2 flex flex-row pointer-events-auto" style={{ gap: '8px' }}>
-        <ModelSelect />
-        <UploadButton />
-      </span>
-      <div className="absolute bottom-2 left-2 pointer-events-auto">
-        <ModelInfoCard />
-      </div>
+      {!showUISampler && (
+        <>
+          <span className="absolute left-2 top-2 gap-2 flex flex-row pointer-events-auto" style={{ gap: '8px' }}>
+            <ModelSelect />
+            <UploadButton />
+          </span>
+          <div className="absolute bottom-2 left-2 pointer-events-auto">
+            <ModelInfoCard />
+          </div>
+        </>
+      )}
       <div className="absolute top-2 right-2 flex flex-col gap-2 pointer-events-auto">
-        <Button
-          className="w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer"
-          onClick={() => store.enterAR()}
-        >
-          <BsHeadsetVr size={20} />
-        </Button>
-        <PanelEnvironmentMenu />
-        <PanelGeometryMenu />
-        <PanelAnnotationMenu />
-        <MeasurementButton />
+        {!showUISampler && (
+          <>
+            <Button
+              className="w-[40px] bg-control rounded-[2px] gap-3 pt-[14px] pr-[10px] pb-[10px] pl-[10px] hover:bg-[#2E3033] cursor-pointer"
+              onClick={() => store.enterAR()}
+            >
+              <BsHeadsetVr size={20} />
+            </Button>
+            <PanelEnvironmentMenu />
+            <PanelGeometryMenu />
+            <PanelAnnotationMenu />
+            <MeasurementButton />
+          </>
+        )}
         <UISamplerButton />
       </div>
-      <AnnotationDialogs />
+      {!showUISampler && <AnnotationDialogs />}
       <PlacementCursor />
     </div>
   )
