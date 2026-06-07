@@ -1,7 +1,8 @@
 import { useRef, useState, type RefObject } from 'react'
 import * as THREE from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Root, Container, Text, setPreferredColorScheme } from '@react-three/uikit'
+import { useXR } from '@react-three/xr'
+import { Root, Fullscreen, Container, Text, setPreferredColorScheme } from '@react-three/uikit'
 import {
   Card,
   Button,
@@ -25,15 +26,18 @@ const PANEL_WIDTH = 360
 const PIXEL_SIZE = 0.0014 // fixed meters-per-UI-pixel; panel size is independent of the model
 const OUTSIDE_GAP = 0.1 // world clearance between the bounding box surface and the panel
 const DAMP = 8 // higher = snappier; lower = more easing as the object/user moves
+const ANGLE_THRESHOLD = 30 // deg; re-anchor the panel only once the orbit angle changes this much
+const SETTLE_POS = 0.01 // m; transition ends once the panel is this close to its target
+const SETTLE_ANGLE = 0.5 // deg; ...and its facing is within this of the target
 
 // Reused across frames to avoid per-frame allocations.
 const _box = new THREE.Box3()
 const _center = new THREE.Vector3()
 const _camPos = new THREE.Vector3()
 const _dir = new THREE.Vector3()
+const _view = new THREE.Vector3()
 const _target = new THREE.Vector3()
-const _prevQuat = new THREE.Quaternion()
-const _targetQuat = new THREE.Quaternion()
+const _tmpObj = new THREE.Object3D() // used to derive a look-at quaternion at an arbitrary point
 
 // Meta Horizon OS dark theme: neutral grays, soft-white primary actions, blue accent.
 // Pure white/black are avoided per the OS color guidance (no darker than #1A1A1A).
@@ -180,17 +184,29 @@ const SamplerPanel = () => {
 
 export const UISampler = ({ targetRef }: { targetRef: RefObject<THREE.Object3D | null> }) => {
   const showUISampler = useSceneStore((s) => s.showUISampler)
+  const screenAligned = useSceneStore((s) => s.uiSamplerScreenAligned)
+  const { session } = useXR()
   const groupRef = useRef<THREE.Group>(null)
   const placed = useRef(false)
+  const transitioning = useRef(false)
+  const committedDir = useRef(new THREE.Vector3())
+  const committedView = useRef(new THREE.Vector3())
+  const committedY = useRef(0)
+  const committedQuat = useRef(new THREE.Quaternion())
   const camera = useThree((s) => s.camera)
+  const viewport = useThree((s) => s.size)
 
   setPreferredColorScheme('dark')
+
+  // Screen-aligned 2D layout only applies on a flat screen (never inside an XR session).
+  const screenMode = showUISampler && screenAligned && !session
 
   useFrame((_, delta) => {
     const group = groupRef.current
     const target = targetRef.current
-    if (!showUISampler || !group || !target) {
+    if (!showUISampler || screenMode || !group || !target) {
       placed.current = false
+      transitioning.current = false
       return
     }
 
@@ -199,10 +215,29 @@ export const UISampler = ({ targetRef }: { targetRef: RefObject<THREE.Object3D |
     _box.getCenter(_center)
     camera.getWorldPosition(_camPos)
 
-    // Horizontal direction from the object toward the user (ignore height).
-    _dir.set(_camPos.x - _center.x, 0, _camPos.z - _center.z)
-    if (_dir.lengthSq() < 1e-6) _dir.set(0, 0, 1)
-    _dir.normalize()
+    // Full 3D direction from the object to the user — includes both orbit (yaw) and
+    // up/down (pitch), so tilting up or down also counts toward the threshold.
+    _view.copy(_camPos).sub(_center)
+    if (_view.lengthSq() < 1e-6) _view.set(0, 0, 1)
+    _view.normalize()
+
+    // Crossing the threshold starts a transition. Once transitioning, keep tracking the
+    // live optimal pose every frame (so it lands where the user actually settles, not at
+    // the mid-motion snapshot) until the panel is close enough — then hold it. Within the
+    // threshold and settled, neither translation nor rotation reacts to small movement.
+    // Object motion/scale still flows through (live center + distance) to avoid clashing.
+    if (!placed.current || _view.angleTo(committedView.current) * (180 / Math.PI) >= ANGLE_THRESHOLD) {
+      transitioning.current = true
+    }
+    if (transitioning.current) {
+      committedView.current.copy(_view)
+      _dir.set(_view.x, 0, _view.z)
+      if (_dir.lengthSq() < 1e-6) _dir.set(0, 0, 1)
+      _dir.normalize()
+      committedDir.current.copy(_dir)
+      committedY.current = THREE.MathUtils.clamp(_camPos.y, _box.min.y, _box.max.y)
+    }
+    _dir.copy(committedDir.current)
 
     // Distance from the center to where the ray exits the AABB, then add clearance.
     const hx = (_box.max.x - _box.min.x) / 2
@@ -212,25 +247,44 @@ export const UISampler = ({ targetRef }: { targetRef: RefObject<THREE.Object3D |
     if (Math.abs(_dir.z) > 1e-6) exit = Math.min(exit, hz / Math.abs(_dir.z))
     const dist = exit + OUTSIDE_GAP
 
-    // Stay within the object's vertical bounds, but prefer the user's eye level.
-    const y = THREE.MathUtils.clamp(_camPos.y, _box.min.y, _box.max.y)
+    _target.set(_center.x + _dir.x * dist, committedY.current, _center.z + _dir.z * dist)
 
-    _target.set(_center.x + _dir.x * dist, y, _center.z + _dir.z * dist)
-
-    // Target orientation (reuse Object3D.lookAt, then restore for damping).
-    _prevQuat.copy(group.quaternion)
-    group.lookAt(_camPos)
-    _targetQuat.copy(group.quaternion)
+    // Facing tracks the target while transitioning, then holds within the threshold.
+    if (transitioning.current) {
+      _tmpObj.position.copy(_target)
+      _tmpObj.up.set(0, 1, 0)
+      _tmpObj.lookAt(_camPos)
+      committedQuat.current.copy(_tmpObj.quaternion)
+    }
 
     if (placed.current) {
       const t = 1 - Math.exp(-DAMP * delta) // frame-rate independent easing
       group.position.lerp(_target, t)
-      group.quaternion.slerpQuaternions(_prevQuat, _targetQuat, t)
+      group.quaternion.slerp(committedQuat.current, t)
     } else {
       group.position.copy(_target) // snap on first appearance, then ease afterwards
+      group.quaternion.copy(committedQuat.current)
       placed.current = true
     }
+
+    // End the transition once the panel has effectively reached the target pose.
+    if (transitioning.current) {
+      const posClose = group.position.distanceTo(_target) < SETTLE_POS
+      const rotClose = group.quaternion.angleTo(committedQuat.current) * (180 / Math.PI) < SETTLE_ANGLE
+      if (posClose && rotClose) transitioning.current = false
+    }
   })
+
+  if (screenMode) {
+    // Lower-right when the screen is at least twice the panel width; otherwise
+    // bottom-center so it reads well on narrow (phone-like) displays.
+    const alignItems = viewport.width >= 2 * PANEL_WIDTH ? 'flex-end' : 'center'
+    return (
+      <Fullscreen flexDirection="column" justifyContent="flex-end" alignItems={alignItems} padding={20} depthTest={false}>
+        <SamplerPanel />
+      </Fullscreen>
+    )
+  }
 
   return (
     <group ref={groupRef}>

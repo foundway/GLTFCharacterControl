@@ -16,7 +16,7 @@ import { useAnnotationStore } from './store/AnnotationStore'
 import { useMeasurementStore } from './store/MeasurementStore'
 import { useSceneStore } from './store/SceneStore'
 import { PiRuler } from 'react-icons/pi'
-import { LuLayoutPanelTop } from 'react-icons/lu'
+import { LuLayoutPanelTop, LuAppWindow } from 'react-icons/lu'
 
 const ModelInfoCard = () => {
   const { displayModel } = useModels()
@@ -144,6 +144,20 @@ const UISamplerButton = () => {
   )
 }
 
+const UIAlignButton = () => {
+  const screenAligned = useSceneStore((s) => s.uiSamplerScreenAligned)
+  const toggleScreenAligned = useSceneStore((s) => s.toggleUISamplerScreenAligned)
+  return (
+    <Button
+      className={`w-[40px] h-[40px] bg-control rounded-[2px] p-0 flex items-center justify-center hover:bg-[#2E3033] cursor-pointer`}
+      title={screenAligned ? 'Screen-aligned UI' : 'Dynamic UI next to object'}
+      onClick={toggleScreenAligned}
+    >
+      <LuAppWindow size={20} className={screenAligned ? 'text-[#32A0C8]' : 'text-white'} />
+    </Button>
+  )
+}
+
 const PlacementCursor = () => {
   const isPlacing = useAnnotationStore((s) => s.isPlacingAnnotation)
   const isMeasurementMode = useMeasurementStore((s) => s.isMeasurementMode)
@@ -198,6 +212,7 @@ const AppOverlay = () => {
           </>
         )}
         <UISamplerButton />
+        {showUISampler && <UIAlignButton />}
       </div>
       {!showUISampler && <AnnotationDialogs />}
       <PlacementCursor />
